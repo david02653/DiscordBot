@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DiscordbotApplication {
 
     public static void main(String[] args) throws Exception {
-        JDAService.createJDA("NzM3MjE0MjQ4OTYyNDkwNDE4.Xx6GRQ.9vXWpSN5LgxnqmDG1Ia1fCfwk4k");
+        JDAService.createJDA("");
 
         SpringApplication.run(DiscordbotApplication.class, args);
     }

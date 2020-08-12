@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YOLO</title>
+</head>
+<body>
+    <h1>Success</h1>
+    <div>
+        <img src="yolo.jpg" alt="yolo.jpg">
+    </div>
+    <div id="space"></div>
+</body>
+<script>
+    let urlBase = window.location.origin + `/DisBot`; // spring boot project endpoint path
+    let tokenBase = "https://discord.com/api/oauth2/token";
+
+    function test(){
+        console.log("initial GET function testing triggered");
+        let url = urlBase + `/test`;
+        fetch(url, {method: 'GET', headers: {
+            'Content-Type': 'application/json'
+            }})
+            .then(function (res) {
+                if(res.ok){
+                    return res.json();
+                }
+            })
+            .then(function (res) {
+                console.log("success(GET)");
+            })
+    }
+
+    // POST method, token exchange
+    function exchangeToken(){
+        console.log("execute token exchange");
+        // get client token from my auth server
+        let codeUrl = urlBase + `/code`;
+        let code;
+        fetch(codeUrl, {method: 'GET', headers: {
+            'Content-Type': 'application/json'
+            }})
+            .then(function (res) {
+                if(res.ok){
+                    return res.json();
+                }
+            })
+            .then(function (res){
+                console.log(res);
+                code = res;
+                console.log(code);
+            })
+        console.log(code);
+        // exchange code to access token, note that POST method is required
+        // let data = {
+        //     'client_id': "737214248962490418",
+        //     'client_secret': "jhsau_0MwJllwK0ggME8RUWdg70SbEE8",
+        //     'grant_type': "authorization_code",
+        //     'code': code,
+        //     'redirect_uri': tokenBase,
+        //     'scope': "identify%20bot"
+        // }
+        // let payload = [];
+        // for(let property in data){
+        //     let encodedKey = encodeURIComponent(property);
+        //     let encodedValue = encodeURIComponent(data[property]);
+        //     payload.push(encodedKey + "=" + encodedValue);
+        // }
+        // payload = payload.join("&");
+        // fetch(tokenBase, {method: 'POST', headers: {
+        //     'Content-Type': 'application/x-www-form-urlencoded'
+        //     }, body: payload})
+        //     .then(function (res){
+        //         console.log(res);
+        //     })
+    }
+
+    // window.onload = () => {
+    //     let fragment = new URLSearchParams()
+    // }
+    // window.addEventListener("load", exchangeToken);
+</script>
+</html>

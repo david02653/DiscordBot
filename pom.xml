@@ -65,6 +65,16 @@
             <artifactId>JDA</artifactId>
             <version>4.2.0_188</version>
         </dependency>
+
+        <!-- rabbitmq -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-amqp</artifactId>
+        </dependency>
     </dependencies>
 
     <repositories>

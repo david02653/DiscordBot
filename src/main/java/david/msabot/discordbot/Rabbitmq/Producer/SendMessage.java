@@ -4,10 +4,7 @@ import david.msabot.discordbot.Rabbitmq.RabbitConfig;
 import okhttp3.Response;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/rabbit")
@@ -19,9 +16,16 @@ public class SendMessage {
     }
 
     @PostMapping(value = "/send")
-    public ResponseEntity<String> send(@RequestParam String message){
+    public ResponseEntity<String> send(@RequestBody String message){
         System.out.println("post message :" + message);
-        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, "dog.cry", message);
+//        template.convertAndSend(RabbitConfig.EXCHANGE_NAME, "cat.#", message);
+        template.convertAndSend(RabbitConfig.TEST_EXCHANGE, "discord.block", message);
         return ResponseEntity.ok(message);
+    }
+
+    @PostMapping(value = "/post")
+    public ResponseEntity<String> postTest(@RequestBody String msg){
+        System.out.println("post method triggered !");
+        return ResponseEntity.ok("your post msg => " + msg);
     }
 }

@@ -16,7 +16,8 @@ public class DiscordbotApplication {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(DiscordbotApplication.class, args);
-        JDAService.createJDA("NzM3MjE0MjQ4OTYyNDkwNDE4.Xx6GRQ.cFnNauBpAUs4XqgMQoFz0O44fgY");
+        // add token in jdaService create function
+        //JDAService.createJDA("NzM3MjE0MjQ4OTYyNDkwNDE4.Xx6GRQ.cFnNauBpAUs4XqgMQoFz0O44fgY");
 
         // set request content
         JsonObject content = new JsonObject();

@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
 public class MessageEvent extends ListenerAdapter {
 
@@ -17,6 +19,17 @@ public class MessageEvent extends ListenerAdapter {
 
             if(event.getTextChannel().getName().contains("channel") && event.getMember().getEffectiveName().contains("david")){
                 event.getTextChannel().sendMessage("I hear you.").queue();
+            }
+
+            if(!event.getAuthor().isBot()){
+                RestTemplate template = new RestTemplate();
+                String testPost = "http://localhost:8080/rabbit/send";
+                HttpHeaders headers = new HttpHeaders();  // http headers setting
+                headers.setContentType(MediaType.APPLICATION_JSON);
+                HttpEntity<String> requestContent = new HttpEntity<String>("{\"message\":\"" + event.getMessage().getContentDisplay() + "\"}", headers);
+                ResponseEntity<String> response = template.exchange(testPost, HttpMethod.POST, requestContent, String.class);
+                System.out.println(response);
+                System.out.println(response.getBody());
             }
         }
     }

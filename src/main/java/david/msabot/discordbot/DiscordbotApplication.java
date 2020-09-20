@@ -1,6 +1,7 @@
 package david.msabot.discordbot;
 
 import com.google.gson.JsonObject;
+import david.msabot.discordbot.Service.JDAService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.*;
@@ -15,7 +16,7 @@ public class DiscordbotApplication {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(DiscordbotApplication.class, args);
-        //JDAService.createJDA("NzM3MjE0MjQ4OTYyNDkwNDE4.Xx6GRQ.9vXWpSN5LgxnqmDG1Ia1fCfwk4k");
+        JDAService.createJDA("NzM3MjE0MjQ4OTYyNDkwNDE4.Xx6GRQ.cFnNauBpAUs4XqgMQoFz0O44fgY");
 
         // set request content
         JsonObject content = new JsonObject();

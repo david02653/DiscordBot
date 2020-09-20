@@ -18,6 +18,7 @@ public class DiscordbotApplication {
         SpringApplication.run(DiscordbotApplication.class, args);
         // add token in jdaService create function
         //JDAService.createJDA("NzM3MjE0MjQ4OTYyNDkwNDE4.Xx6GRQ.cFnNauBpAUs4XqgMQoFz0O44fgY");
+        //test commit
 
         // set request content
         JsonObject content = new JsonObject();

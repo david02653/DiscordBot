@@ -26,6 +26,8 @@ public class RabbitConfig {
     public static final String TEST_QUEUE = "testQ";
     public static final String JENKINS_EXCHANGE = "jenkins";
     public static final String JENKINS_QUEUE = "jChannel";
+    public static final String EUREKA_EXCHANGE = "eurekaserver";
+    public static final String EUREKA_QUEUE = "eureka";
 
 
     @Bean
@@ -78,6 +80,19 @@ public class RabbitConfig {
         return BindingBuilder.bind(createJenkinsQueue()).to(exchangeJenkins()).with("jenkins.*");
     }
 
+    @Bean
+    Queue createEurekaQueue(){
+        return new Queue(EUREKA_QUEUE, true);
+    }
+    @Bean
+    TopicExchange exchangeEureka(){
+        return new TopicExchange(EUREKA_EXCHANGE);
+    }
+    @Bean
+    Binding bindEureka(){
+        return BindingBuilder.bind(createEurekaQueue()).to(exchangeEureka()).with("eureka.*");
+    }
+
 
 
     @Bean
@@ -87,6 +102,10 @@ public class RabbitConfig {
     @Bean
     MessageListenerAdapter jenkinsListener(MessageHandler handler){
         return new MessageListenerAdapter(handler, "handleJenkinsMessage");
+    }
+    @Bean
+    MessageListenerAdapter eurekaListener(MessageHandler handler){
+        return new MessageListenerAdapter(handler, "handleEurekaMessage");
     }
 
     // consumer settings
@@ -109,6 +128,15 @@ public class RabbitConfig {
         container.setMessageListener(jenkinsListener(new MessageHandler()));
 
 
+        return container;
+    }
+
+    @Bean
+    SimpleMessageListenerContainer eurekaContainer(ConnectionFactory connectionFactory){
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueueNames(EUREKA_QUEUE);
+        container.setMessageListener(eurekaListener(new MessageHandler()));
         return container;
     }
 }

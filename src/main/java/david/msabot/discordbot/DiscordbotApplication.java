@@ -17,20 +17,20 @@ public class DiscordbotApplication {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(DiscordbotApplication.class, args);
         // add token in jdaService create function
-        JDAService.createJDA("");
+        JDAService.createJDA("NzM3MjE0MjQ4OTYyNDkwNDE4.Xx6GRQ.d0UWomGg9QDaSXjx5Iy6SoNw1DA");
 
         // set request content
-        JsonObject content = new JsonObject();
-        content.addProperty("msg", "test comment");
+//        JsonObject content = new JsonObject();
+//        content.addProperty("msg", "test comment");
 //        System.out.println(content.toString());
 
-        String testPost = rabbitPath + "/post";
-        HttpHeaders headers = new HttpHeaders();  // http headers setting
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestContent = new HttpEntity<String>("{\"message\":\"kkkkkkkkkkk\"}", headers);
-        ResponseEntity<String> response = template.exchange(testPost, HttpMethod.POST, requestContent, String.class);
-        System.out.println(response);
-        System.out.println(response.getBody());
+//        String testPost = rabbitPath + "/post";
+//        HttpHeaders headers = new HttpHeaders();  // http headers setting
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        HttpEntity<String> requestContent = new HttpEntity<String>("{\"message\":\"kkkkkkkkkkk\"}", headers);
+//        ResponseEntity<String> response = template.exchange(testPost, HttpMethod.POST, requestContent, String.class);
+//        System.out.println(response);
+//        System.out.println(response.getBody());
 
 
     }

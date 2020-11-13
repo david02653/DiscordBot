@@ -1,5 +1,6 @@
 package david.msabot.discordbot.Controller.Event;
 
+import david.msabot.discordbot.Service.RasaService;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
@@ -17,19 +18,23 @@ public class MessageEvent extends ListenerAdapter {
         }else{
             System.out.printf("[%s][%s] %s: %s\n", event.getGuild().getName(), event.getTextChannel().getName(), event.getMember().getEffectiveName(), event.getMessage().getContentDisplay());
 
-            if(event.getTextChannel().getName().contains("channel") && event.getMember().getEffectiveName().contains("david")){
-                event.getTextChannel().sendMessage("I hear you.").queue();
-            }
+            /* reply with 'I hear you' when any user input detected */
+//            if(event.getTextChannel().getName().contains("channel") && event.getMember().getEffectiveName().contains("david")){
+//                event.getTextChannel().sendMessage("I hear you.").queue();
+//            }
 
             if(!event.getAuthor().isBot()){
-                RestTemplate template = new RestTemplate();
-                String testPost = "http://localhost:8080/rabbit/send";
-                HttpHeaders headers = new HttpHeaders();  // http headers setting
-                headers.setContentType(MediaType.APPLICATION_JSON);
-                HttpEntity<String> requestContent = new HttpEntity<String>("{\"message\":\"" + event.getMessage().getContentDisplay() + "\"}", headers);
-                ResponseEntity<String> response = template.exchange(testPost, HttpMethod.POST, requestContent, String.class);
-                System.out.println(response);
-                System.out.println(response.getBody());
+//                RestTemplate template = new RestTemplate();
+//                String testPost = "http://localhost:8080/rabbit/send";
+//                HttpHeaders headers = new HttpHeaders();  // http headers setting
+//                headers.setContentType(MediaType.APPLICATION_JSON);
+//                HttpEntity<String> requestContent = new HttpEntity<String>("{\"message\":\"" + event.getMessage().getContentDisplay() + "\"}", headers);
+//                ResponseEntity<String> response = template.exchange(testPost, HttpMethod.POST, requestContent, String.class);
+//                System.out.println(response);
+//                System.out.println(response.getBody());
+
+                String msgReceived = event.getMessage().getContentDisplay();
+                RasaService.analyzeIntent(msgReceived);
             }
         }
     }

@@ -1,0 +1,8 @@
+channel: test_channel
+list:
+  - creator: david
+    question: Is it on
+    answer: yeah, as you see
+  - creator: david
+    question: how to add
+    answer: add question in yaml file

@@ -1,23 +1,19 @@
 package david.msabot.discordbot.Service;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import david.msabot.discordbot.Entity.Intent;
-import david.msabot.discordbot.Entity.RawIntent;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Objects;
 
 public class RasaService {
 
 //    @Value("${env.setting.rasa.url}")
 //    String RASA_ENDPOINT;
+    private static int stage;
 
     public static String analyzeIntent(String data){
 
@@ -31,60 +27,123 @@ public class RasaService {
 //        System.out.println(path);
 
         // set request content
-//        JsonObject content = new JsonObject();
-//        content.addProperty("msg", "test comment");
-//
-//        String testPost = rabbitPath + "/post";
-//        HttpHeaders headers = new HttpHeaders();  // http headers setting
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        HttpEntity<String> requestContent = new HttpEntity<String>("{\"message\":\"kkkkkkkkkkk\"}", headers);
-//        ResponseEntity<String> response = template.exchange(testPost, HttpMethod.POST, requestContent, String.class);
-//        System.out.println(response);
-//        System.out.println(response.getBody());
         JsonObject content = new JsonObject();
         content.addProperty("message", data);
         HttpHeaders headers = new HttpHeaders();
-        HttpEntity<String> requestContent = new HttpEntity<String>(content.toString(), headers);
-        ResponseEntity<String> response = template.exchange(path, HttpMethod.POST, requestContent, String.class);
-//        System.out.println(response.getBody());
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<String> entity = new HttpEntity<String>(content.toString(), headers);
+        ResponseEntity<String> response = template.exchange(path, HttpMethod.POST, entity, String.class);
 
-
-        String raw = changeFormat(response.getBody());
+//        System.out.println(response);
+//        System.out.println("response body : " + response.getBody());
+//        String raw = changeFormat(response.getBody());
+//        System.out.println("target json : " + raw);
+        String raw = noSlash(response.getBody());
         System.out.println(raw);
-//        raw = raw.replace("\"", "\\\"");
-//        raw = raw.replace("\\\\\"", "\\\"");
-//        System.out.println(raw);
-//        JSONObject object = new JSONObject(changeFormat(raw));
-//        System.out.println(object);
 
         try{
+            /* Gson version, no backslash and no '"' surround object required */
+            Gson gson = new Gson();
+            Intent analyseResult = gson.fromJson(raw, Intent.class);
+            System.out.println(analyseResult);
+            /* available version, backslash and no '"' surround object required */
 //            JSONObject object = new JSONObject(raw);
-//            System.out.println(object);
-            ObjectMapper mapper = new ObjectMapper();
-//            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            Intent rawIntent = mapper.readValue(raw, Intent.class);
-//            System.out.println(rawIntent.recipient_id);
-//            System.out.println(rawIntent.text);
-//            Intent intent = mapper.readValue(object.getString("text"), Intent.class);
-//            System.out.println(intent.intent);
-//            System.out.println(intent.service);
+//            String inner = object.getString("text");
+//            System.out.println(inner);
+//            JSONObject innerObject = new JSONObject(inner);
+//            System.out.println(innerObject);
+//            if(innerObject.has("service")) System.out.println(innerObject.getString("service"));
+//            else System.out.println("service not exist");
+//            System.out.println(innerObject.getString("intent"));
+
+            String intent = analyseResult.getIntent();
+            String service = analyseResult.getService();
+
+            if(service != null && !Objects.equals(service, "none")){
+                /* no service */
+            }else{
+                /* handle service */
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
         return null;
     }
 
     public static String changeFormat(String raw){
         String[] token = raw.split(",");
         String data = "{";
-        for(int i=1; i<token.length; i++)
+        for(int i=1; i<token.length; i++) {
             data += token[i];
+            if(i != token.length-1) data += ",";
+        }
         data = data.replace("'", "\"");
         StringBuilder builder = new StringBuilder(data);
         builder.deleteCharAt(builder.length()-1);
 //        builder.deleteCharAt(0);
-        return builder.toString();
+
+        String temp = builder.toString();
+        String result = "{";
+        String[] second = temp.split("");
+        for(int i=1; i<second.length; i++){
+//            System.out.println("current=[" + second[i] + "], i=" + i + ", result=[" + result + "]");
+            int open = StringUtils.countOccurrencesOf(temp.substring(0, i), "{");
+            int close = StringUtils.countOccurrencesOf(temp.substring(0, i), "}");
+            if(second[i].equals("\"")){
+                if(open - close == 1){
+                    if(second[i+1].equals("{") || second[i-1].equals("}")) {
+                        result += "";
+                    }
+                    else{
+                        result += "\\\"";
+                    }
+//                    result += second[i];
+                    continue;
+                }else{
+                    if(second[i-1].equals("\\")) {
+                        result += second[i];
+                    }else{
+                        result += "\\\"";
+                    }
+                    continue;
+                }
+            }
+            result += second[i];
+        }
+
+        return result;
+    }
+
+    public static String noSlash(String raw){
+        String[] token = raw.split("");
+        StringBuilder result = new StringBuilder();
+        for(String t: token){
+            if(t.equals("\\")) continue;
+            if(t.equals("'")){
+                result.append("\"");
+                continue;
+            }
+            result.append(t);
+        }
+        result.deleteCharAt(result.length()-1);
+        result.deleteCharAt(0);
+
+        String temp = result.toString();
+        StringBuilder output = new StringBuilder("{");
+        String[] second = temp.split("");
+        for(int i=1; i<second.length; i++){
+//            System.out.println("current=[" + second[i] + "], i=" + i + ", result=[" + result + "]");
+            int open = StringUtils.countOccurrencesOf(temp.substring(0, i), "{");
+            int close = StringUtils.countOccurrencesOf(temp.substring(0, i), "}");
+            if(second[i].equals("\"")){
+                if(open - close == 1){
+                    if(second[i+1].equals("{") || second[i-1].equals("}")) {
+                        continue;
+                    }
+                }
+            }
+            output.append(second[i]);
+        }
+        return output.toString();
     }
 }

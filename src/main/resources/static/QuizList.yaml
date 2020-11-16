@@ -6,3 +6,12 @@ list:
   - creator: david
     question: how to add
     answer: add question in yaml file
+  - creator: david
+    question: any others?
+    answer: text2
+---
+channel: text2
+list:
+  - creator: david
+    question: where is it
+    answer: this is channel text2

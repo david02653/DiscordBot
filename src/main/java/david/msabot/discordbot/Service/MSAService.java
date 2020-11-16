@@ -1,6 +1,7 @@
 package david.msabot.discordbot.Service;
 
 public class MSAService {
+    // TODO: implement all MSABot functions
 
     // Eureka service
     public void serviceEnvironment(){

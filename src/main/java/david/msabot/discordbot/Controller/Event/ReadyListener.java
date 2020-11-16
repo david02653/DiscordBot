@@ -4,16 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import david.msabot.discordbot.Entity.AdditionalQuizList;
 import david.msabot.discordbot.Entity.Quiz;
+import david.msabot.discordbot.Service.AdditionalQAService;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class ReadyListener implements EventListener {
+
+    @Autowired
+    public AdditionalQAService aqaService;
 
     @Override
     public void onEvent(@NotNull GenericEvent event) {

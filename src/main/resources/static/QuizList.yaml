@@ -1,17 +1,38 @@
 channel: test_channel
 list:
   - creator: david
+    resource: file
+    source: none
+    method: none
     question: Is it on
     answer: yeah, as you see
   - creator: david
+    resource: file
+    source: none
+    method: none
     question: how to add
     answer: add question in yaml file
   - creator: david
+    resource: file
+    source: none
+    method: none
     question: any others?
     answer: text2
 ---
 channel: text2
 list:
   - creator: david
+    resource: file
+    source: none
+    method: none
     question: where is it
     answer: this is channel text2
+---
+channel: text3
+list:
+  - creator: david
+    resource: rest
+    source: url
+    method: get
+    question: help
+    answer: ok

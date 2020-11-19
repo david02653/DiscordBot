@@ -13,44 +13,27 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.*;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
+@Component
 public class MessageEvent extends ListenerAdapter {
 
     @Autowired
-    private AdditionalQAService aqaService;
-//    public ArrayList<Quiz> list;
+    private static AdditionalQAService aqaService;
 
-//    public MessageEvent(){
-//        list = aqaService.getQuizList();
-//    }
+//    private final List<AdditionalQuizList> lists = aqaService.getAdditionalQuizList();
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event){
-
-        /* load yaml context */
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-//        YAMLFactory yaml;
-//        ObjectMapper mapper;
-//        YAMLParser yamlParser;
-        mapper.findAndRegisterModules();
-        ArrayList<AdditionalQuizList> quizLists;
-        AdditionalQuizList quizList;
-        ArrayList<Quiz> list = null;
-        try{
-            quizList = mapper.readValue(new File("./src/main/resources/static/QuizList.yaml"), AdditionalQuizList.class);
-            System.out.println(quizList);
-
-            list = quizList.getList();
-//            System.out.println(list);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
 
         if(event.isFromType(ChannelType.PRIVATE)){
             System.out.printf("[private message] %s: %s\n", event.getAuthor().getName(), event.getMessage().getContentDisplay());
@@ -77,15 +60,17 @@ public class MessageEvent extends ListenerAdapter {
                 if(msgReceived.startsWith("!")){
                     String cmd = msgReceived.substring(1);
                     /* check additional QA */
+//                    System.out.println(lists);
+                    System.out.println(aqaService);
                     //if(AdditionalQAService.getQuizList() != null){
-                    if(list != null) {
-                        for (Quiz q : list) {
-                            System.out.println(q);
-                            if (q.getQuestion().equals(cmd)) {
-                                event.getTextChannel().sendMessage(q.getAnswer()).queue();
-                            }
-                        }
-                    }
+//                    if(lists != null) {
+//                        for (Additon q : lists) {
+//                            System.out.println(q);
+//                            if (q.getQuestion().equals(cmd)) {
+//                                event.getTextChannel().sendMessage(q.getAnswer()).queue();
+//                            }
+//                        }
+//                    }
                 }else{
                     /* intent analyze */
                     RasaService.analyzeIntent(msgReceived);

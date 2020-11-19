@@ -2,6 +2,9 @@ package david.msabot.discordbot.Entity;
 
 public class Quiz {
     private String creator;
+    private String resource;
+    private String source = null;
+    private String method = null;
     private String question;
     private String answer;
 
@@ -19,12 +22,36 @@ public class Quiz {
         this.answer = answer;
     }
 
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
     public String getCreator() {
         return creator;
     }
 
     public String getQuestion() {
         return question;
+    }
+
+    public String getResource() {
+        return resource;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public String getMethod() {
+        return method;
     }
 
     public String getAnswer() {
@@ -35,6 +62,9 @@ public class Quiz {
     public String toString() {
         return "Quiz{" +
                 "creator='" + creator + '\'' +
+                ", resource='" + resource + '\'' +
+                ", source='" + source + '\'' +
+                ", method='" + method + '\'' +
                 ", question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
                 '}';

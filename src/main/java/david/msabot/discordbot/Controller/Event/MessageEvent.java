@@ -53,13 +53,15 @@ public class MessageEvent extends ListenerAdapter {
 
                 if(msgReceived.startsWith("!")){
                     String aqaMsg = parse(msgReceived);
-                    String channel = event.getTextChannel().getName();
+                    String channel = event.getTextChannel().getName().toLowerCase();
                     String resource;
 //                    System.out.println(AdditionalQAService.getAdditionalQuizList());
                     /* check additional QA */
                     HashMap<String, HashMap<String, Quiz>> map = AdditionalQAService.getMap();
+                    System.out.println(map);
                     if(map.get(channel) != null){
                         Quiz quiz = map.get(channel).get(aqaMsg.toLowerCase());
+                        System.out.println(quiz);
                         if(quiz != null){
                             if(quiz.getResource().toLowerCase().equals("rest")){
                                 // request for answer
@@ -80,7 +82,7 @@ public class MessageEvent extends ListenerAdapter {
     }
 
     private static String parse(String input){
-        String raw = input.substring(1);
+        String raw = input.substring(1); // remove command head
 
 //        String[] token = raw.split(" ");
 //        StringBuilder builder = new StringBuilder();
@@ -91,6 +93,6 @@ public class MessageEvent extends ListenerAdapter {
 //                builder.append(" ");
 //        }
         System.out.println("parsed: [" + raw.trim() + "]");
-        return raw.trim();
+        return raw.trim().toLowerCase();
     }
 }

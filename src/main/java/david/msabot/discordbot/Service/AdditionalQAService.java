@@ -54,9 +54,9 @@ public class AdditionalQAService {
         lists.forEach(channel -> {
             HashMap<String, Quiz> map = new HashMap<>();
             channel.getList().forEach(quiz -> {
-                map.put(quiz.getQuestion(), quiz);
+                map.put(quiz.getQuestion().toLowerCase(), quiz);
             });
-            target.put(channel.getChannel(), map);
+            target.put(channel.getChannel().toLowerCase(), map);
         });
         return target;
     }

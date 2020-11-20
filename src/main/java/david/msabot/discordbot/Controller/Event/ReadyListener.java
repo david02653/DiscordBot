@@ -23,20 +23,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class ReadyListener implements EventListener {
-
-    @Autowired
-    public static AdditionalQAService aqaService;
 
     @Override
     public void onEvent(@NotNull GenericEvent event) {
         if(event instanceof ReadyEvent){
             System.out.println("> JDA API ready");
 
-            if(aqaService.loadFile()){
+            if(AdditionalQAService.loadFile()){
                 System.out.println(">> yaml file load success !");
-                System.out.println(aqaService.getAdditionalQuizList());
+                System.out.println(AdditionalQAService.getAdditionalQuizList());
             }else{
                 System.out.println(">> yaml file load error");
             }

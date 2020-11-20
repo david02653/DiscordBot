@@ -24,13 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class MessageEvent extends ListenerAdapter {
-
-    @Autowired
-    private static AdditionalQAService aqaService;
-
-//    private final List<AdditionalQuizList> lists = aqaService.getAdditionalQuizList();
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event){
@@ -60,8 +54,7 @@ public class MessageEvent extends ListenerAdapter {
                 if(msgReceived.startsWith("!")){
                     String cmd = msgReceived.substring(1);
                     /* check additional QA */
-//                    System.out.println(lists);
-                    System.out.println(aqaService);
+                    System.out.println(AdditionalQAService.getAdditionalQuizList());
                     //if(AdditionalQAService.getQuizList() != null){
 //                    if(lists != null) {
 //                        for (Additon q : lists) {

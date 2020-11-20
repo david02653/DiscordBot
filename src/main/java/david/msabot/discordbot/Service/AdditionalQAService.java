@@ -8,6 +8,7 @@ import david.msabot.discordbot.Entity.Quiz;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,4 +43,13 @@ public class AdditionalQAService {
         }
         return true;
     }
+
+//    @PostConstruct
+//    public void init(){
+//        try{
+//            System.out.println("initialize");
+//        }catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

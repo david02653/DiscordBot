@@ -3,6 +3,7 @@ package david.msabot.discordbot.Controller.Event;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
+import com.iwebpp.crypto.TweetNaclFast;
 import david.msabot.discordbot.Entity.AdditionalQuizList;
 import david.msabot.discordbot.Entity.Message;
 import david.msabot.discordbot.Entity.Quiz;
@@ -21,8 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MessageEvent extends ListenerAdapter {
 
@@ -52,18 +52,23 @@ public class MessageEvent extends ListenerAdapter {
                 String msgReceived = event.getMessage().getContentDisplay();
 
                 if(msgReceived.startsWith("!")){
-                    String cmd = msgReceived.substring(1);
+                    String aqaMsg = parse(msgReceived);
+                    String channel = event.getTextChannel().getName();
+                    String resource;
+//                    System.out.println(AdditionalQAService.getAdditionalQuizList());
                     /* check additional QA */
-                    System.out.println(AdditionalQAService.getAdditionalQuizList());
-                    //if(AdditionalQAService.getQuizList() != null){
-//                    if(lists != null) {
-//                        for (Additon q : lists) {
-//                            System.out.println(q);
-//                            if (q.getQuestion().equals(cmd)) {
-//                                event.getTextChannel().sendMessage(q.getAnswer()).queue();
-//                            }
-//                        }
-//                    }
+                    HashMap<String, HashMap<String, Quiz>> map = AdditionalQAService.getMap();
+                    if(map.get(channel) != null){
+                        Quiz quiz = map.get(channel).get(aqaMsg.toLowerCase());
+                        if(quiz != null){
+                            if(quiz.getResource().toLowerCase().equals("rest")){
+                                // request for answer
+                            }else{
+                                // return answer from file
+                                event.getTextChannel().sendMessage(quiz.getAnswer()).queue();
+                            }
+                        }
+                    }
                 }else{
                     /* intent analyze */
                     RasaService.analyzeIntent(msgReceived);
@@ -72,5 +77,20 @@ public class MessageEvent extends ListenerAdapter {
 
             }
         }
+    }
+
+    private static String parse(String input){
+        String raw = input.substring(1);
+
+//        String[] token = raw.split(" ");
+//        StringBuilder builder = new StringBuilder();
+//        Iterator<String> stringIterator = Arrays.stream(token).iterator();
+//        while(stringIterator.hasNext()){
+//            builder.append(stringIterator.next());
+//            if(stringIterator.hasNext())
+//                builder.append(" ");
+//        }
+        System.out.println("parsed: [" + raw.trim() + "]");
+        return raw.trim();
     }
 }

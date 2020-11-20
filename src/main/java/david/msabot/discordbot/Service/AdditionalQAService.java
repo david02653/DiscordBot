@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -24,6 +25,10 @@ public class AdditionalQAService {
 
     public static List<AdditionalQuizList> getAdditionalQuizList(){
         return lists;
+    }
+
+    public static HashMap<String, HashMap<String, Quiz>> getMap(){
+        return parse();
     }
 
     /* load yaml context */
@@ -42,6 +47,18 @@ public class AdditionalQAService {
             return false;
         }
         return true;
+    }
+
+    public static HashMap<String, HashMap<String, Quiz>> parse(){
+        HashMap<String, HashMap<String, Quiz>> target = new HashMap<>();
+        lists.forEach(channel -> {
+            HashMap<String, Quiz> map = new HashMap<>();
+            channel.getList().forEach(quiz -> {
+                map.put(quiz.getQuestion(), quiz);
+            });
+            target.put(channel.getChannel(), map);
+        });
+        return target;
     }
 
 //    @PostConstruct

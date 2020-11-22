@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 import david.msabot.discordbot.Entity.AdditionalQuizList;
 import david.msabot.discordbot.Entity.Quiz;
 import david.msabot.discordbot.Service.AdditionalQAService;
+import david.msabot.discordbot.Service.MSAService;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
@@ -32,7 +33,7 @@ public class ReadyListener implements EventListener {
 
             if(AdditionalQAService.loadFile()){
                 System.out.println(">> yaml file load success !");
-                System.out.println(AdditionalQAService.getAdditionalQuizList());
+                System.out.println(AdditionalQAService.getMap());
             }else{
                 System.out.println(">> yaml file load error");
             }

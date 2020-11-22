@@ -3,6 +3,7 @@ package david.msabot.discordbot.Controller.Event;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
+import com.google.gson.Gson;
 import com.iwebpp.crypto.TweetNaclFast;
 import david.msabot.discordbot.Entity.AdditionalQuizList;
 import david.msabot.discordbot.Entity.Message;
@@ -19,6 +20,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
@@ -54,11 +56,10 @@ public class MessageEvent extends ListenerAdapter {
                 if(msgReceived.startsWith("!")){
                     String aqaMsg = parse(msgReceived);
                     String channel = event.getTextChannel().getName().toLowerCase();
-                    String resource;
+                    HashMap<String, HashMap<String, Quiz>> map = AdditionalQAService.getMap();
 //                    System.out.println(AdditionalQAService.getAdditionalQuizList());
                     /* check additional QA */
-                    HashMap<String, HashMap<String, Quiz>> map = AdditionalQAService.getMap();
-                    System.out.println(map);
+//                    System.out.println(map);
                     if(map.get(channel) != null){
                         Quiz quiz = map.get(channel).get(aqaMsg.toLowerCase());
                         System.out.println(quiz);
@@ -70,6 +71,8 @@ public class MessageEvent extends ListenerAdapter {
                                 event.getTextChannel().sendMessage(quiz.getAnswer()).queue();
                             }
                         }
+                    }else{
+                        event.getTextChannel().sendMessage("yaml file mapping error").queue();
                     }
                 }else{
                     /* intent analyze */
@@ -92,7 +95,33 @@ public class MessageEvent extends ListenerAdapter {
 //            if(stringIterator.hasNext())
 //                builder.append(" ");
 //        }
-        System.out.println("parsed: [" + raw.trim() + "]");
         return raw.trim().toLowerCase();
+    }
+
+    public static String restRequest(String source, String method){
+        String type = method.toLowerCase();
+        RestTemplate template = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        switch(type){
+            case "get":
+                // request get method
+                break;
+            case "post":
+                // request post method
+                break;
+            default:
+                return "";
+        }
+//        final String url = "https://contractbody-fakeapi.herokuapp.com/";
+//        RestTemplate restTemplate = new RestTemplate();
+//        Gson gson = new Gson();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+//        HttpEntity<?> entity = new HttpEntity<>(headers);
+//        System.out.println(restTemplate.exchange(url, HttpMethod.GET, entity, Contract.class));
+//        System.out.println(restTemplate.exchange(url, HttpMethod.GET, entity, String.class));
+        return null;
     }
 }

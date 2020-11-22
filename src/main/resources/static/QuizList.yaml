@@ -16,7 +16,7 @@ list:
     resource: file
     source: none
     method: none
-    question: any others?
+    question: any others
     answer: text2
 ---
 channel: text2

@@ -1,7 +1,5 @@
 package david.msabot.discordbot.Entity;
 
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
-
 import java.util.ArrayList;
 
 public class EurekaResponse {
@@ -79,7 +77,7 @@ class Instance{
     private String ipAddr;
     private String status;
     private String overriddenStatus;
-    private String port;
+    private Integer port;
     private String securePort;
     private int countryId;
     private DataCenterInfo dataCenterInfo;
@@ -119,7 +117,7 @@ class Instance{
         this.overriddenStatus = overriddenStatus;
     }
 
-    public void setPort(String port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 
@@ -178,10 +176,136 @@ class Instance{
     public void setActionType(String actionType) {
         this.actionType = actionType;
     }
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public String getApp() {
+        return app;
+    }
+
+    public String getIpAddr() {
+        return ipAddr;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getOverriddenStatus() {
+        return overriddenStatus;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public String getSecurePort() {
+        return securePort;
+    }
+
+    public int getCountryId() {
+        return countryId;
+    }
+
+    public DataCenterInfo getDataCenterInfo() {
+        return dataCenterInfo;
+    }
+
+    public LeaseInfo getLeaseInfo() {
+        return leaseInfo;
+    }
+
+    public MetaData getMetaData() {
+        return metaData;
+    }
+
+    public String getHomePageUrl() {
+        return homePageUrl;
+    }
+
+    public String getStatusPageUrl() {
+        return statusPageUrl;
+    }
+
+    public String getHealthCheckUrl() {
+        return healthCheckUrl;
+    }
+
+    public String getVipAddress() {
+        return vipAddress;
+    }
+
+    public String getSecureVipAddress() {
+        return secureVipAddress;
+    }
+
+    public boolean isCoordinatingDiscoveryServer() {
+        return isCoordinatingDiscoveryServer;
+    }
+
+    public String getLastUpdatedTimestamp() {
+        return lastUpdatedTimestamp;
+    }
+
+    public String getLastDirtyTimestamp() {
+        return lastDirtyTimestamp;
+    }
+
+    public String getActionType() {
+        return actionType;
+    }
+
+    @Override
+    public String toString() {
+        return "Instance{" +
+                "instanceId='" + instanceId + '\'' +
+                ", hostName='" + hostName + '\'' +
+                ", app='" + app + '\'' +
+                ", ipAddr='" + ipAddr + '\'' +
+                ", status='" + status + '\'' +
+                ", overriddenStatus='" + overriddenStatus + '\'' +
+                ", port='" + port + '\'' +
+                ", securePort='" + securePort + '\'' +
+                ", countryId=" + countryId +
+                ", dataCenterInfo=" + dataCenterInfo +
+                ", leaseInfo=" + leaseInfo +
+                ", metaData=" + metaData +
+                ", homePageUrl='" + homePageUrl + '\'' +
+                ", statusPageUrl='" + statusPageUrl + '\'' +
+                ", healthCheckUrl='" + healthCheckUrl + '\'' +
+                ", vipAddress='" + vipAddress + '\'' +
+                ", secureVipAddress='" + secureVipAddress + '\'' +
+                ", isCoordinatingDiscoveryServer=" + isCoordinatingDiscoveryServer +
+                ", lastUpdatedTimestamp='" + lastUpdatedTimestamp + '\'' +
+                ", lastDirtyTimestamp='" + lastDirtyTimestamp + '\'' +
+                ", actionType='" + actionType + '\'' +
+                '}';
+    }
 }
 
 class DataCenterInfo{
     private String name;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "DataCenterInfo{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }
 
 class LeaseInfo{
@@ -191,10 +315,85 @@ class LeaseInfo{
     private String lastRenewalTimestamp;
     private String evictionTimestamp;
     private String serviceUpTimestamp;
+
+    public void setRenewalIntervalInSecs(int renewalIntervalInSecs) {
+        this.renewalIntervalInSecs = renewalIntervalInSecs;
+    }
+
+    public void setDurationInSecs(int durationInSecs) {
+        this.durationInSecs = durationInSecs;
+    }
+
+    public void setRegistrationTimestamp(String registrationTimestamp) {
+        this.registrationTimestamp = registrationTimestamp;
+    }
+
+    public void setLastRenewalTimestamp(String lastRenewalTimestamp) {
+        this.lastRenewalTimestamp = lastRenewalTimestamp;
+    }
+
+    public void setEvictionTimestamp(String evictionTimestamp) {
+        this.evictionTimestamp = evictionTimestamp;
+    }
+
+    public void setServiceUpTimestamp(String serviceUpTimestamp) {
+        this.serviceUpTimestamp = serviceUpTimestamp;
+    }
+
+    public int getRenewalIntervalInSecs() {
+        return renewalIntervalInSecs;
+    }
+
+    public int getDurationInSecs() {
+        return durationInSecs;
+    }
+
+    public String getRegistrationTimestamp() {
+        return registrationTimestamp;
+    }
+
+    public String getLastRenewalTimestamp() {
+        return lastRenewalTimestamp;
+    }
+
+    public String getEvictionTimestamp() {
+        return evictionTimestamp;
+    }
+
+    public String getServiceUpTimestamp() {
+        return serviceUpTimestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "LeaseInfo{" +
+                "renewalIntervalInSecs=" + renewalIntervalInSecs +
+                ", durationInSecs=" + durationInSecs +
+                ", registrationTimestamp='" + registrationTimestamp + '\'' +
+                ", lastRenewalTimestamp='" + lastRenewalTimestamp + '\'' +
+                ", evictionTimestamp='" + evictionTimestamp + '\'' +
+                ", serviceUpTimestamp='" + serviceUpTimestamp + '\'' +
+                '}';
+    }
 }
 
 class MetaData{
     private int managementPort;
+
+    public void setManagementPort(int managementPort) {
+        this.managementPort = managementPort;
+    }
+
+    public int getManagementPort() {
+        return managementPort;
+    }
+
+    @Override
+    public String toString() {
+        return "MetaData{" +
+                "managementPort=" + managementPort +
+                '}';
+    }
 }
 
 /*

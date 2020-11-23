@@ -3,15 +3,12 @@ package david.msabot.discordbot.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
-import david.msabot.discordbot.Entity.AdditionalQuizList;
-import david.msabot.discordbot.Entity.Quiz;
-import org.springframework.stereotype.Component;
+import david.msabot.discordbot.Entity.AQA.AdditionalQuizList;
+import david.msabot.discordbot.Entity.AQA.Quiz;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

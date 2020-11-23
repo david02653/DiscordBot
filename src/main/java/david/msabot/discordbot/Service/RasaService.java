@@ -2,13 +2,10 @@ package david.msabot.discordbot.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import david.msabot.discordbot.Entity.Intent;
-import org.json.JSONObject;
+import david.msabot.discordbot.Entity.Rasa.Intent;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Objects;
 
 public class RasaService {
 
@@ -17,6 +14,7 @@ public class RasaService {
     private static int stage;
 
     public static String analyzeIntent(String data){
+        MSAService msaService = new MSAService();
 
         String RASA_ENDPOINT = "http://140.121.197.130:9004";
 
@@ -60,13 +58,16 @@ public class RasaService {
 //            else System.out.println("service not exist");
 //            System.out.println(innerObject.getString("intent"));
 
-            String intent = analyseResult.getIntent();
-            String service = analyseResult.getService();
+            String intent = analyseResult.getText().getIntent();
+            String service = analyseResult.getText().getService();
 
-            if(service != null && !Objects.equals(service, "none")){
-                /* no service */
-            }else{
+            if(service != null && !service.equals("none")){
                 /* handle service */
+                System.out.println(service);
+            }else{
+                /* no service */
+                if(intent.equals("action_service_health"))
+                    return msaService.healthData();
             }
         }catch (Exception e){
             e.printStackTrace();

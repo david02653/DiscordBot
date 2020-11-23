@@ -1,4 +1,4 @@
-package david.msabot.discordbot.Entity;
+package david.msabot.discordbot.Entity.AQA;
 
 public class Quiz {
     private String creator;

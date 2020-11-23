@@ -24,6 +24,12 @@ list:
     method: get:xml
     question: app data
     answer: get service app data
+  - creator: david
+    resource: rasa
+    source: none
+    method: none
+    question: health data
+    answer: service health data
 ---
 channel: text2
 list:

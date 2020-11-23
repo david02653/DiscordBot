@@ -1,29 +1,14 @@
 package david.msabot.discordbot.Controller.Event;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
-import com.google.gson.Gson;
-import com.iwebpp.crypto.TweetNaclFast;
-import david.msabot.discordbot.Entity.AdditionalQuizList;
-import david.msabot.discordbot.Entity.Message;
-import david.msabot.discordbot.Entity.Quiz;
+import david.msabot.discordbot.Entity.AQA.Quiz;
 import david.msabot.discordbot.Service.AdditionalQAService;
 import david.msabot.discordbot.Service.RasaService;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.http.*;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
 import java.util.*;
 
 public class MessageEvent extends ListenerAdapter {
@@ -67,6 +52,9 @@ public class MessageEvent extends ListenerAdapter {
                             if(quiz.getResource().toLowerCase().equals("rest")){
                                 // request for answer
                                 event.getTextChannel().sendMessage(restRequest(quiz.getSource(), quiz.getMethod())).queue();
+                            }else if(quiz.getResource().toLowerCase().equals("rasa")){
+                                // send to rasa
+                                event.getTextChannel().sendMessage(RasaService.analyzeIntent(quiz.getQuestion())).queue();
                             }else{
                                 // return answer from file
                                 event.getTextChannel().sendMessage(quiz.getAnswer()).queue();

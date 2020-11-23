@@ -90,4 +90,8 @@ public class MSAService {
     public void checkIntent(){
         // implement stage_check_intent
     }
+
+    public String replaceReversed(String source){
+        return source.replace("class=", "source=");
+    }
 }

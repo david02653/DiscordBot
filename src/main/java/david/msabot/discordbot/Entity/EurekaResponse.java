@@ -1,8 +1,11 @@
 package david.msabot.discordbot.Entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class EurekaResponse {
     @JsonProperty("versions__delta")
@@ -10,7 +13,8 @@ public class EurekaResponse {
     @JsonProperty("apps__hashcode")
     private String appsHashCode;
     @JsonProperty("application")
-    private ArrayList<Application> appList;
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<Application> appList;
 
     public void setVersionsDelta(String versionsDelta) {
         this.versionsDelta = versionsDelta;
@@ -20,7 +24,7 @@ public class EurekaResponse {
         this.appsHashCode = appsHashCode;
     }
 
-    public void setAppList(ArrayList<Application> appList) {
+    public void setAppList(List<Application> appList) {
         this.appList = appList;
     }
 
@@ -32,7 +36,7 @@ public class EurekaResponse {
         return appsHashCode;
     }
 
-    public ArrayList<Application> getAppList() {
+    public List<Application> getAppList() {
         return appList;
     }
 
@@ -48,13 +52,13 @@ public class EurekaResponse {
 
 class Application{
     private String name;
-    private ArrayList<Instance> instance;
+    private Instance instance;
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setInstance(ArrayList<Instance> instance) {
+    public void setInstance(Instance instance) {
         this.instance = instance;
     }
 
@@ -62,7 +66,7 @@ class Application{
         return name;
     }
 
-    public ArrayList<Instance> getInstance() {
+    public Instance getInstance() {
         return instance;
     }
 
@@ -81,12 +85,14 @@ class Instance{
     private String app;
     private String ipAddr;
     private String status;
+    @JsonProperty("overriddenstatus")
     private String overriddenStatus;
-    private Integer port;
-    private String securePort;
+    private Port port;
+    private Port securePort;
     private int countryId;
     private DataCenterInfo dataCenterInfo;
     private LeaseInfo leaseInfo;
+    @JsonProperty("metadata")
     private MetaData metaData;
     private String homePageUrl;
     private String statusPageUrl;
@@ -122,11 +128,11 @@ class Instance{
         this.overriddenStatus = overriddenStatus;
     }
 
-    public void setPort(Integer port) {
+    public void setPort(Port port) {
         this.port = port;
     }
 
-    public void setSecurePort(String securePort) {
+    public void setSecurePort(Port securePort) {
         this.securePort = securePort;
     }
 
@@ -166,7 +172,7 @@ class Instance{
         this.secureVipAddress = secureVipAddress;
     }
 
-    public void setCoordinatingDiscoveryServer(boolean coordinatingDiscoveryServer) {
+    public void setIsCoordinatingDiscoveryServer(boolean coordinatingDiscoveryServer) {
         isCoordinatingDiscoveryServer = coordinatingDiscoveryServer;
     }
 
@@ -206,11 +212,11 @@ class Instance{
         return overriddenStatus;
     }
 
-    public Integer getPort() {
+    public Port getPort() {
         return port;
     }
 
-    public String getSecurePort() {
+    public Port getSecurePort() {
         return securePort;
     }
 
@@ -250,7 +256,7 @@ class Instance{
         return secureVipAddress;
     }
 
-    public boolean isCoordinatingDiscoveryServer() {
+    public boolean getIsCoordinatingDiscoveryServer() {
         return isCoordinatingDiscoveryServer;
     }
 
@@ -294,21 +300,63 @@ class Instance{
     }
 }
 
+class Port{
+    @JacksonXmlProperty(isAttribute = true)
+    private String enabled;
+    @JacksonXmlText(value = true)
+    private Integer port;
+
+    public void setEnabled(String enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public String getEnabled() {
+        return enabled;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    @Override
+    public String toString() {
+        return "Port{" +
+                "enabled='" + enabled + '\'' +
+                ", port=" + port +
+                '}';
+    }
+}
+
 class DataCenterInfo{
+    @JacksonXmlProperty(isAttribute = true)
+    private String source;
     private String name;
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public void setSource(String source) {
+        this.source = source;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getSource() {
+        return source;
     }
 
     @Override
     public String toString() {
         return "DataCenterInfo{" +
-                "name='" + name + '\'' +
+                "source='" + source + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }
@@ -383,6 +431,7 @@ class LeaseInfo{
 }
 
 class MetaData{
+    @JsonProperty("management.port")
     private int managementPort;
 
     public void setManagementPort(int managementPort) {

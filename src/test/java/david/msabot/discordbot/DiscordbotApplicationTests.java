@@ -2,6 +2,7 @@ package david.msabot.discordbot;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import david.msabot.discordbot.Entity.EurekaResponse;
+import david.msabot.discordbot.Service.MSAService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
@@ -25,9 +26,10 @@ class DiscordbotApplicationTests {
         headers.set("Accept", MediaType.APPLICATION_XML_VALUE);
         HttpEntity<?> entity = new HttpEntity<>(headers);
         String xml = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+        MSAService service = new MSAService();
 
         XmlMapper mapper = new XmlMapper();
-        EurekaResponse value = mapper.readValue(xml, EurekaResponse.class);
+        EurekaResponse value = mapper.readValue(service.replaceReversed(xml), EurekaResponse.class);
         System.out.println(value);
     }
 

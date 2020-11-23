@@ -1,10 +1,15 @@
 package david.msabot.discordbot.Entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 public class EurekaResponse {
+    @JsonProperty("versions__delta")
     private String versionsDelta;
+    @JsonProperty("apps__hashcode")
     private String appsHashCode;
+    @JsonProperty("application")
     private ArrayList<Application> appList;
 
     public void setVersionsDelta(String versionsDelta) {
@@ -43,29 +48,29 @@ public class EurekaResponse {
 
 class Application{
     private String name;
-    private ArrayList<Instance> instanceList;
+    private ArrayList<Instance> instance;
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setInstanceList(ArrayList<Instance> instanceList) {
-        this.instanceList = instanceList;
+    public void setInstance(ArrayList<Instance> instance) {
+        this.instance = instance;
     }
 
     public String getName() {
         return name;
     }
 
-    public ArrayList<Instance> getInstanceList() {
-        return instanceList;
+    public ArrayList<Instance> getInstance() {
+        return instance;
     }
 
     @Override
     public String toString() {
         return "Application{" +
                 "name='" + name + '\'' +
-                ", instanceList=" + instanceList +
+                ", instanceList=" + instance +
                 '}';
     }
 }

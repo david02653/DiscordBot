@@ -1,14 +1,18 @@
 package david.msabot.discordbot.Service;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Value;
+import david.msabot.discordbot.Entity.Eureka.Application;
+import david.msabot.discordbot.Entity.Eureka.EurekaResponse;
+import david.msabot.discordbot.Entity.Eureka.Instance;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.GregorianCalendar;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @PropertySource("classpath:application.properties")
@@ -45,17 +49,41 @@ public class MSAService {
     }
 
     // Eureka service
-    public void healthData(){
+    public String healthData(){
         // implement action_service_health
         // need to parse xml
+        String url = "http://140.121.197.130:9040/eureka/apps";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_XML_VALUE);
         HttpEntity<?> entity = new HttpEntity<>(headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange("url", HttpMethod.GET, entity, String.class);
-        String response = responseEntity.toString();
-        Gson gson = new Gson();
-        System.out.println(response);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        String xml = response.getBody();
+        if(xml == null || response.getStatusCodeValue() != 200){
+            // request error
+            return "error occurred at api request";
+        }
+        StringBuilder builder = new StringBuilder();
+        try{
+            XmlMapper mapper = new XmlMapper();
+            EurekaResponse result = mapper.readValue(replaceReversed(xml), EurekaResponse.class);
+            HashMap<String, Instance> map = mapSerialize(result);
+
+            int count = 0;
+            for(Map.Entry<String, Instance> entry: map.entrySet()){
+                String name = entry.getKey();
+                Instance instance = entry.getValue();
+                builder.append(++count);
+                builder.append(".[");
+                builder.append(name);
+                builder.append("]: ");
+                builder.append(instance.getStatus());
+                builder.append("\n");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return builder.toString();
     }
 
     // Eureka service
@@ -93,5 +121,14 @@ public class MSAService {
 
     public String replaceReversed(String source){
         return source.replace("class=", "source=");
+    }
+
+    public HashMap<String, Instance> mapSerialize(EurekaResponse raw){
+        ArrayList<Application> list = raw.getAppList();
+        HashMap<String, Instance> map = new HashMap<>();
+        list.forEach(app -> {
+            map.put(app.getName(), app.getInstance());
+        });
+        return map;
     }
 }

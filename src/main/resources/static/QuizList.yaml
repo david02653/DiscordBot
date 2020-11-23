@@ -18,6 +18,12 @@ list:
     method: none
     question: any others
     answer: text2
+  - creator: david
+    resource: rest
+    source: http://140.121.197.130:9040/eureka/apps
+    method: get:xml
+    question: app data
+    answer: get service app data
 ---
 channel: text2
 list:

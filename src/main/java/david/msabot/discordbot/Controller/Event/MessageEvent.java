@@ -66,6 +66,7 @@ public class MessageEvent extends ListenerAdapter {
                         if(quiz != null){
                             if(quiz.getResource().toLowerCase().equals("rest")){
                                 // request for answer
+                                event.getTextChannel().sendMessage(restRequest(quiz.getSource(), quiz.getMethod())).queue();
                             }else{
                                 // return answer from file
                                 event.getTextChannel().sendMessage(quiz.getAnswer()).queue();
@@ -99,15 +100,17 @@ public class MessageEvent extends ListenerAdapter {
     }
 
     public static String restRequest(String source, String method){
-        String type = method.toLowerCase();
+        String raw = method.toLowerCase();
+        String type = raw.split(":")[0];
         RestTemplate template = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        headers.set("Accept", methodType(method));
+        System.out.println(methodType(method));
         HttpEntity<?> entity = new HttpEntity<>(headers);
         switch(type){
             case "get":
                 // request get method
-                break;
+                return template.exchange(source, HttpMethod.GET, entity, String.class).getBody();
             case "post":
                 // request post method
                 break;
@@ -123,5 +126,16 @@ public class MessageEvent extends ListenerAdapter {
 //        System.out.println(restTemplate.exchange(url, HttpMethod.GET, entity, Contract.class));
 //        System.out.println(restTemplate.exchange(url, HttpMethod.GET, entity, String.class));
         return null;
+    }
+
+    public static String methodType(String method){
+        String[] token = method.split(":");
+        switch(token[token.length - 1]){
+            case "xml":
+                return MediaType.APPLICATION_XML_VALUE;
+            case "json":
+                return MediaType.APPLICATION_JSON_VALUE;
+        }
+        return MediaType.ALL_VALUE;
     }
 }

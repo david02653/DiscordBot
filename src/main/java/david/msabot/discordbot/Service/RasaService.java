@@ -3,6 +3,7 @@ package david.msabot.discordbot.Service;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import david.msabot.discordbot.Entity.Intent;
+import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -36,16 +37,19 @@ public class RasaService {
 
 //        System.out.println(response);
 //        System.out.println("response body : " + response.getBody());
+        /* jsonObject version string pre-handle */
 //        String raw = changeFormat(response.getBody());
 //        System.out.println("target json : " + raw);
+
+        /* gson string pre-handle */
         String raw = noSlash(response.getBody());
-        System.out.println(raw);
+        System.out.println("raw : " + raw);
 
         try{
             /* Gson version, no backslash and no '"' surround object required */
             Gson gson = new Gson();
             Intent analyseResult = gson.fromJson(raw, Intent.class);
-            System.out.println(analyseResult);
+            System.out.println("gson analyzed: " + analyseResult);
             /* available version, backslash and no '"' surround object required */
 //            JSONObject object = new JSONObject(raw);
 //            String inner = object.getString("text");

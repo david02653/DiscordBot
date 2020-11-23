@@ -1,7 +1,7 @@
 package david.msabot.discordbot;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import david.msabot.discordbot.Entity.EurekaResponse;
+import david.msabot.discordbot.Entity.Eureka.EurekaResponse;
 import david.msabot.discordbot.Service.MSAService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

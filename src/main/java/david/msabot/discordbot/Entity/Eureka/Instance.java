@@ -1,85 +1,10 @@
-package david.msabot.discordbot.Entity;
+package david.msabot.discordbot.Entity.Eureka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 
-import java.util.List;
-
-public class EurekaResponse {
-    @JsonProperty("versions__delta")
-    private String versionsDelta;
-    @JsonProperty("apps__hashcode")
-    private String appsHashCode;
-    @JsonProperty("application")
-    @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Application> appList;
-
-    public void setVersionsDelta(String versionsDelta) {
-        this.versionsDelta = versionsDelta;
-    }
-
-    public void setAppsHashCode(String appsHashCode) {
-        this.appsHashCode = appsHashCode;
-    }
-
-    public void setAppList(List<Application> appList) {
-        this.appList = appList;
-    }
-
-    public String getVersionsDelta() {
-        return versionsDelta;
-    }
-
-    public String getAppsHashCode() {
-        return appsHashCode;
-    }
-
-    public List<Application> getAppList() {
-        return appList;
-    }
-
-    @Override
-    public String toString() {
-        return "EurekaResponse{" +
-                "versionsDelta='" + versionsDelta + '\'' +
-                ", appsHashCode='" + appsHashCode + '\'' +
-                ", appList=" + appList +
-                '}';
-    }
-}
-
-class Application{
-    private String name;
-    private Instance instance;
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setInstance(Instance instance) {
-        this.instance = instance;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Instance getInstance() {
-        return instance;
-    }
-
-    @Override
-    public String toString() {
-        return "Application{" +
-                "name='" + name + '\'' +
-                ", instanceList=" + instance +
-                '}';
-    }
-}
-
-class Instance{
+public class Instance{
     private String instanceId;
     private String hostName;
     private String app;
@@ -449,50 +374,3 @@ class MetaData{
                 '}';
     }
 }
-
-/*
-<applications>
-  <versions__delta>1</versions__delta>
-  <apps__hashcode>UP_6_</apps__hashcode>
-  <application>
-    <name>CINEMACATALOG</name>
-    <instance>
-      <instanceId>3cf16c3aa1dc:cinemacatalog:9014</instanceId>
-      <hostName>140.121.197.130</hostName>
-      <app>CINEMACATALOG</app>
-      <ipAddr>140.121.197.130</ipAddr>
-      <status>UP</status>
-      <overriddenstatus>UNKNOWN</overriddenstatus>
-      <port enabled="true">9014</port>
-      <securePort enabled="false">443</securePort>
-      <countryId>1</countryId>
-      <dataCenterInfo class="com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo">
-        <name>MyOwn</name>
-      </dataCenterInfo>
-      <leaseInfo>
-        <renewalIntervalInSecs>1</renewalIntervalInSecs>
-        <durationInSecs>2</durationInSecs>
-        <registrationTimestamp>1606073608201</registrationTimestamp>
-        <lastRenewalTimestamp>1606075092179</lastRenewalTimestamp>
-        <evictionTimestamp>0</evictionTimestamp>
-        <serviceUpTimestamp>1606073608201</serviceUpTimestamp>
-      </leaseInfo>
-      <metadata>
-        <management.port>9014</management.port>
-      </metadata>
-      <homePageUrl>http://140.121.197.130:9014/</homePageUrl>
-      <statusPageUrl>http://140.121.197.130:9014/info</statusPageUrl>
-      <healthCheckUrl>http://140.121.197.130:9014/health</healthCheckUrl>
-      <vipAddress>cinemacatalog</vipAddress>
-      <secureVipAddress>cinemacatalog</secureVipAddress>
-      <isCoordinatingDiscoveryServer>false</isCoordinatingDiscoveryServer>
-      <lastUpdatedTimestamp>1606073608201</lastUpdatedTimestamp>
-      <lastDirtyTimestamp>1606073608132</lastDirtyTimestamp>
-      <actionType>ADDED</actionType>
-    </instance>
-  </application>
-  <application></application>
-  <application></application>
-  ...
-</applications>
- */

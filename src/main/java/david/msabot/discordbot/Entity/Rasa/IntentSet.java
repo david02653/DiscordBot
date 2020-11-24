@@ -1,6 +1,6 @@
 package david.msabot.discordbot.Entity.Rasa;
 
-public class TextField{
+public class IntentSet {
     public String intent;
     public String service;
 
@@ -22,7 +22,7 @@ public class TextField{
 
     @Override
     public String toString() {
-        return "textField{" +
+        return "IntentSet{" +
                 "intent='" + intent + '\'' +
                 ", service='" + service + '\'' +
                 '}';

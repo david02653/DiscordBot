@@ -3,6 +3,7 @@ package david.msabot.discordbot.Service;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import david.msabot.discordbot.Entity.Rasa.Intent;
+import david.msabot.discordbot.Entity.Rasa.IntentSet;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -13,7 +14,7 @@ public class RasaService {
 //    String RASA_ENDPOINT;
     private static int stage;
 
-    public static String analyzeIntent(String data){
+    public static IntentSet analyzeIntent(String data){
         MSAService msaService = new MSAService();
 
         String RASA_ENDPOINT = "http://140.121.197.130:9004";
@@ -33,7 +34,7 @@ public class RasaService {
         HttpEntity<String> entity = new HttpEntity<String>(content.toString(), headers);
         ResponseEntity<String> response = template.exchange(path, HttpMethod.POST, entity, String.class);
 
-//        System.out.println(response);
+        System.out.println(response);
 //        System.out.println("response body : " + response.getBody());
         /* jsonObject version string pre-handle */
 //        String raw = changeFormat(response.getBody());
@@ -61,14 +62,15 @@ public class RasaService {
             String intent = analyseResult.getText().getIntent();
             String service = analyseResult.getText().getService();
 
-            if(service != null && !service.equals("none")){
-                /* handle service */
-                System.out.println(service);
-            }else{
-                /* no service */
-                if(intent.equals("action_service_health"))
-                    return msaService.healthData();
-            }
+//            if(service != null && !service.equals("none")){
+//                /* handle service */
+//                System.out.println(service);
+//            }else{
+//                /* no service */
+//                if(intent.equals("action_service_health"))
+//                    return msaService.healthData();
+//            }
+            return analyseResult.getText();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -151,4 +153,6 @@ public class RasaService {
         }
         return output.toString();
     }
+
+
 }

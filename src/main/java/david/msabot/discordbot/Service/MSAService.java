@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import david.msabot.discordbot.Entity.Eureka.Application;
 import david.msabot.discordbot.Entity.Eureka.EurekaResponse;
 import david.msabot.discordbot.Entity.Eureka.Instance;
+import david.msabot.discordbot.Entity.Rasa.IntentSet;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class MSAService {
     // TODO: implement all MSABot functions
 
 //    @Value("${env.setting.rasa.url}")
-    private String zuul = "http://140.121.197.130:9039";
+    private static String zuul = "http://140.121.197.130:9039";
 
     // Eureka service
     public void serviceEnvironment(){
@@ -28,7 +29,7 @@ public class MSAService {
     }
 
     // Zuul and swagger service
-    public void apiList(){
+    public static void apiList(){
         // implement action_service_api_list
         String url = zuul + "/";
         RestTemplate restTemplate = new RestTemplate();
@@ -49,7 +50,7 @@ public class MSAService {
     }
 
     // Eureka service
-    public String healthData(){
+    public static String healthData(){
         // implement action_service_health
         // need to parse xml
         String url = "http://140.121.197.130:9040/eureka/apps";
@@ -115,15 +116,29 @@ public class MSAService {
     }
 
     // check if result has service name
-    public void checkIntent(){
+    public static String checkIntent(IntentSet set){
         // implement stage_check_intent
+        String intent = set.getIntent();
+        String service = set.getService();
+
+        /* intents don't need service name */
+        switch (intent){
+            case "action_service_env":
+                return null;
+            case "action_service_health":
+                return healthData();
+            default:
+                break;
+        }
+
+        return null;
     }
 
-    public String replaceReversed(String source){
+    public static String replaceReversed(String source){
         return source.replace("class=", "source=");
     }
 
-    public HashMap<String, Instance> mapSerialize(EurekaResponse raw){
+    public static HashMap<String, Instance> mapSerialize(EurekaResponse raw){
         ArrayList<Application> list = raw.getAppList();
         HashMap<String, Instance> map = new HashMap<>();
         list.forEach(app -> {

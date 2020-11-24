@@ -2,9 +2,9 @@ package david.msabot.discordbot.Entity.Rasa;
 
 public class Intent {
     public String recipient_id;
-    public TextField text;
+    public IntentSet text;
 
-    public void setText(TextField text) {
+    public void setText(IntentSet text) {
         this.text = text;
     }
 
@@ -12,7 +12,7 @@ public class Intent {
         this.recipient_id = recipient_id;
     }
 
-    public TextField getText() {
+    public IntentSet getText() {
         return text;
     }
 
@@ -23,12 +23,12 @@ public class Intent {
     @Override
     public String toString() {
         return "Intent{" +
-                "text=" + text +
-                ", recipient_id='" + recipient_id + '\'' +
+                "recipient_id='" + recipient_id + '\'' +
+                ", text=" + text +
                 '}';
     }
 
-//    @Override
+    //    @Override
 //    public String toString() {
 //        return "Intent{" +
 //                "text=" + text +

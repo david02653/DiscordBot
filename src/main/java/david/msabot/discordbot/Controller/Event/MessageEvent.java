@@ -2,6 +2,7 @@ package david.msabot.discordbot.Controller.Event;
 
 import david.msabot.discordbot.Entity.AQA.Quiz;
 import david.msabot.discordbot.Service.AdditionalQAService;
+import david.msabot.discordbot.Service.MSAService;
 import david.msabot.discordbot.Service.RasaService;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -54,7 +55,7 @@ public class MessageEvent extends ListenerAdapter {
                                 event.getTextChannel().sendMessage(restRequest(quiz.getSource(), quiz.getMethod())).queue();
                             }else if(quiz.getResource().toLowerCase().equals("rasa")){
                                 // send to rasa
-                                event.getTextChannel().sendMessage(RasaService.analyzeIntent(quiz.getQuestion())).queue();
+                                event.getTextChannel().sendMessage(MSAService.checkIntent(RasaService.analyzeIntent(quiz.getQuestion()))).queue();
                             }else{
                                 // return answer from file
                                 event.getTextChannel().sendMessage(quiz.getAnswer()).queue();

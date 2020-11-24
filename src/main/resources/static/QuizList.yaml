@@ -40,11 +40,29 @@ list:
     question: where is it
     answer: this is channel text2
 ---
-channel: text3
+channel: prototype
 list:
-  - creator: david
+  - creator: prototype
+    resource: file
+    source: none
+    method: none
+    question: fixed question
+    answer: fixed answer
+  - creator: prototype
     resource: rest
     source: url
-    method: get
-    question: help
-    answer: ok
+    method: get:contentType
+    question: get-command
+    answer: anything
+  - creator: prototype
+    resource: rest
+    source: url
+    method: post:contentType
+    question: post-command
+    answer: requestBody?
+  - creator: prototype
+    resource: rasa
+    source: none
+    method: none
+    question: current rasa input
+    answer: intent output / anything

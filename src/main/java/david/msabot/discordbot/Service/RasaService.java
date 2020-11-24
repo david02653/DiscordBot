@@ -59,17 +59,6 @@ public class RasaService {
 //            else System.out.println("service not exist");
 //            System.out.println(innerObject.getString("intent"));
 
-            String intent = analyseResult.getText().getIntent();
-            String service = analyseResult.getText().getService();
-
-//            if(service != null && !service.equals("none")){
-//                /* handle service */
-//                System.out.println(service);
-//            }else{
-//                /* no service */
-//                if(intent.equals("action_service_health"))
-//                    return msaService.healthData();
-//            }
             return analyseResult.getText();
         }catch (Exception e){
             e.printStackTrace();

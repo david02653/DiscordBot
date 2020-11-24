@@ -60,6 +60,8 @@ public class MessageEvent extends ListenerAdapter {
                                 // return answer from file
                                 event.getTextChannel().sendMessage(quiz.getAnswer()).queue();
                             }
+                        }else{
+                            event.getTextChannel().sendMessage("This additional QA is not available or not exist !").queue();
                         }
                     }else{
                         event.getTextChannel().sendMessage("yaml file mapping error").queue();
@@ -67,6 +69,7 @@ public class MessageEvent extends ListenerAdapter {
                 }else{
                     /* intent analyze */
                     RasaService.analyzeIntent(msgReceived);
+                    event.getTextChannel().sendMessage(RasaService.analyzeIntent(msgReceived).toString()).queue();
                 }
 
 
@@ -106,14 +109,6 @@ public class MessageEvent extends ListenerAdapter {
             default:
                 return "";
         }
-//        final String url = "https://contractbody-fakeapi.herokuapp.com/";
-//        RestTemplate restTemplate = new RestTemplate();
-//        Gson gson = new Gson();
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-//        HttpEntity<?> entity = new HttpEntity<>(headers);
-//        System.out.println(restTemplate.exchange(url, HttpMethod.GET, entity, Contract.class));
-//        System.out.println(restTemplate.exchange(url, HttpMethod.GET, entity, String.class));
         return null;
     }
 

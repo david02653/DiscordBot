@@ -28,14 +28,6 @@ public class Intent {
                 '}';
     }
 
-    //    @Override
-//    public String toString() {
-//        return "Intent{" +
-//                "text=" + text +
-//                '}';
-//    }
-
-
 }
 
 

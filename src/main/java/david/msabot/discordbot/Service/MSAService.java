@@ -6,7 +6,9 @@ import david.msabot.discordbot.Entity.Eureka.Application;
 import david.msabot.discordbot.Entity.Eureka.EurekaResponse;
 import david.msabot.discordbot.Entity.Eureka.Instance;
 import david.msabot.discordbot.Entity.Rasa.IntentSet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +21,9 @@ import java.util.Map;
 @PropertySource("classpath:application.properties")
 public class MSAService {
     // TODO: implement all MSABot functions
+
+    @Autowired
+    public Environment environment;
 
 //    @Value("${env.setting.rasa.url}")
     private static String zuul = "http://140.121.197.130:9039";

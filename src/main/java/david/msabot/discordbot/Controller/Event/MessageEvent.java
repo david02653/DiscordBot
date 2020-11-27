@@ -7,12 +7,14 @@ import david.msabot.discordbot.Service.RasaService;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 public class MessageEvent extends ListenerAdapter {
+    RasaService rasa = new RasaService();
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event){
@@ -55,7 +57,7 @@ public class MessageEvent extends ListenerAdapter {
                                 event.getTextChannel().sendMessage(restRequest(quiz.getSource(), quiz.getMethod())).queue();
                             }else if(quiz.getResource().toLowerCase().equals("rasa")){
                                 // send to rasa
-                                event.getTextChannel().sendMessage(MSAService.checkIntent(RasaService.analyzeIntent(quiz.getQuestion()))).queue();
+                                event.getTextChannel().sendMessage(MSAService.checkIntent(rasa.analyzeIntent(quiz.getQuestion()))).queue();
                             }else{
                                 // return answer from file
                                 event.getTextChannel().sendMessage(quiz.getAnswer()).queue();
@@ -68,8 +70,8 @@ public class MessageEvent extends ListenerAdapter {
                     }
                 }else{
                     /* intent analyze */
-                    RasaService.analyzeIntent(msgReceived);
-                    event.getTextChannel().sendMessage(RasaService.analyzeIntent(msgReceived).toString()).queue();
+                    rasa.analyzeIntent(msgReceived);
+                    event.getTextChannel().sendMessage(rasa.analyzeIntent(msgReceived).toString()).queue();
                 }
 
 

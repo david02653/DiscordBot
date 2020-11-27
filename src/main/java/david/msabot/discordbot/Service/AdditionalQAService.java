@@ -20,7 +20,7 @@ public class AdditionalQAService {
 //    private static ArrayList<AdditionalQuizList> lists = null;
     private static List<AdditionalQuizList> lists;
 
-    public static List<AdditionalQuizList> getAdditionalQuizList(){
+    public List<AdditionalQuizList> getAdditionalQuizList(){
         return lists;
     }
 

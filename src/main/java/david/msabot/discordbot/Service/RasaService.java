@@ -4,20 +4,26 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import david.msabot.discordbot.Entity.Rasa.Intent;
 import david.msabot.discordbot.Entity.Rasa.IntentSet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 public class RasaService {
 
+    @Autowired
+    private Environment environment;
+
 //    @Value("${env.setting.rasa.url}")
 //    String RASA_ENDPOINT;
     private static int stage;
 
-    public static IntentSet analyzeIntent(String data){
+    public IntentSet analyzeIntent(String data){
         MSAService msaService = new MSAService();
 
-        String RASA_ENDPOINT = "http://140.121.197.130:9004";
+//        String RASA_ENDPOINT = "http://140.121.197.130:9004";
+        String RASA_ENDPOINT = environment.getProperty("env.setting.rasa.url");
 
         // implement function stage_rasa(...)
         // POST method to rasa endpoint, return with json type data {intent, data}
@@ -66,7 +72,7 @@ public class RasaService {
         return null;
     }
 
-    public static String changeFormat(String raw){
+    public String changeFormat(String raw){
         String[] token = raw.split(",");
         String data = "{";
         for(int i=1; i<token.length; i++) {
@@ -110,7 +116,7 @@ public class RasaService {
         return result;
     }
 
-    public static String noSlash(String raw){
+    public String noSlash(String raw){
         String[] token = raw.split("");
         StringBuilder result = new StringBuilder();
         for(String t: token){

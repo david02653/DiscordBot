@@ -1,4 +1,4 @@
-package david.msabot.discordbot.Controller.Event;
+package david.msabot.discordbot.Controller.DiscordEvent;
 
 import david.msabot.discordbot.Service.AdditionalQAService;
 import net.dv8tion.jda.api.events.GenericEvent;

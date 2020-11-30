@@ -1,4 +1,4 @@
-package david.msabot.discordbot.Controller.Event;
+package david.msabot.discordbot.Controller.DiscordEvent;
 
 import david.msabot.discordbot.Entity.AQA.Quiz;
 import david.msabot.discordbot.Service.AdditionalQAService;
@@ -7,7 +7,6 @@ import david.msabot.discordbot.Service.RasaService;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 

@@ -14,8 +14,11 @@ import org.springframework.amqp.rabbit.support.DefaultMessagePropertiesConverter
 import org.springframework.amqp.rabbit.support.MessagePropertiesConverter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Arrays;
 
 @Configuration
 public class RabbitConfig {
@@ -28,6 +31,10 @@ public class RabbitConfig {
     public static final String JENKINS_QUEUE = "jChannel";
     public static final String EUREKA_EXCHANGE = "eurekaserver";
     public static final String EUREKA_QUEUE = "eureka";
+
+    public static final String MISCELLANEOUS = "MISCELLANEOUS";
+    public static final String MASTER_QUEUE = "master";
+
 
 
     @Bean
@@ -93,8 +100,21 @@ public class RabbitConfig {
         return BindingBuilder.bind(createEurekaQueue()).to(exchangeEureka()).with("eureka.*");
     }
 
+    @Bean
+    Queue createMiscellaneousQueue(){
+        return new Queue(MASTER_QUEUE, true);
+    }
+    @Bean
+    TopicExchange exchangeMiscellaneous(){
+        return new TopicExchange(MISCELLANEOUS);
+    }
+    @Bean
+    Binding bindMiscellaneous(){
+        return BindingBuilder.bind(createMiscellaneousQueue()).to(exchangeMiscellaneous()).with("#");
+    }
 
 
+    /* consumer message function settings */
     @Bean
     MessageListenerAdapter listenerAdapter(MessageHandler handler){
         return new MessageListenerAdapter(handler, "handleMessage");
@@ -127,7 +147,6 @@ public class RabbitConfig {
         container.setQueueNames(JENKINS_QUEUE);
         container.setMessageListener(jenkinsListener(new MessageHandler()));
 
-
         return container;
     }
 
@@ -137,6 +156,21 @@ public class RabbitConfig {
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(EUREKA_QUEUE);
         container.setMessageListener(eurekaListener(new MessageHandler()));
+        return container;
+    }
+
+    @Bean
+    SimpleMessageListenerContainer miscellaneousContainer(ConnectionFactory connectionFactory){
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueueNames(MASTER_QUEUE);
+        container.setMessageListener((MessageListener) message -> {
+            System.out.println(message.getMessageProperties());
+            System.out.println(message.getMessageProperties().getContentType());
+            System.out.println(message.getMessageProperties().getTimestamp());
+            System.out.println(Arrays.toString(message.getBody()));
+            System.out.println(new String(message.getBody()));
+        });
         return container;
     }
 }

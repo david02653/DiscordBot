@@ -6,6 +6,7 @@ import com.rabbitmq.client.impl.AMQBasicProperties;
 import com.rabbitmq.client.impl.AMQContentHeader;
 import com.sun.tools.jconsole.JConsoleContext;
 import david.msabot.discordbot.Rabbitmq.Consumer.MessageHandler;
+import david.msabot.discordbot.Service.JDAService;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -169,7 +170,14 @@ public class RabbitConfig {
             System.out.println(message.getMessageProperties().getContentType());
             System.out.println(message.getMessageProperties().getTimestamp());
             System.out.println(Arrays.toString(message.getBody()));
-            System.out.println(new String(message.getBody()));
+            String msg = new String(message.getBody());
+            System.out.println(msg);
+            try {
+                JDAService.jda.awaitReady();
+                JDAService.send("text2", " [x] from '" + message.getMessageProperties().getReceivedRoutingKey() + "' : " + msg);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
         return container;
     }

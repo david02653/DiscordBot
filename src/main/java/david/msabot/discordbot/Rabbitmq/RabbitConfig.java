@@ -147,6 +147,7 @@ public class RabbitConfig {
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(JENKINS_QUEUE);
         container.setMessageListener(jenkinsListener(new MessageHandler()));
+        // nothing
 
         return container;
     }

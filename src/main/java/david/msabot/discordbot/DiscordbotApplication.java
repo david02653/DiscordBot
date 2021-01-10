@@ -2,6 +2,7 @@ package david.msabot.discordbot;
 
 import com.google.gson.JsonObject;
 import david.msabot.discordbot.Service.JDAService;
+import david.msabot.discordbot.Service.MSAService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.*;
@@ -17,7 +18,7 @@ public class DiscordbotApplication {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(DiscordbotApplication.class, args);
         // add token in jdaService create function
-        JDAService.createJDA("NzM3MjE0MjQ4OTYyNDkwNDE4.Xx6GRQ.d0UWomGg9QDaSXjx5Iy6SoNw1DA");
+        JDAService.createJDA("NzM3MjE0MjQ4OTYyNDkwNDE4.Xx6GRQ.DuKAFAIRjN9SeONfcyH6kDK-R60");
 
         // set request content
 //        JsonObject content = new JsonObject();

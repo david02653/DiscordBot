@@ -57,4 +57,8 @@ public class BotController {
     public ResponseEntity<String> getCode(){
         return ResponseEntity.ok().body(service.getCode());
     }
+
+    public ResponseEntity<?> getContentUrl(){
+        return null;
+    }
 }

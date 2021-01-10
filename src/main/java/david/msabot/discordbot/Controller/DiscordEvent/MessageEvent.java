@@ -53,7 +53,13 @@ public class MessageEvent extends ListenerAdapter {
                         if(quiz != null){
                             if(quiz.getResource().toLowerCase().equals("rest")){
                                 // request for answer
-                                event.getTextChannel().sendMessage(restRequest(quiz.getSource(), quiz.getMethod())).queue();
+//                                event.getTextChannel().sendMessage(restRequest(quiz.getSource(), quiz.getMethod())).queue();
+//                                event.getTextChannel().sendMessage(AdditionalQAService.insertMessage(event.getMessage().getContentDisplay())).queue();
+                                String result = restRequest(quiz.getSource(), quiz.getMethod());
+                                if(result.length() > 2000)
+                                    event.getTextChannel().sendMessage(AdditionalQAService.insertMessage(restRequest(quiz.getSource(), quiz.getMethod()))).queue();
+                                else
+                                    event.getTextChannel().sendMessage(restRequest(quiz.getSource(), quiz.getMethod())).queue();
                             }else if(quiz.getResource().toLowerCase().equals("rasa")){
                                 // send to rasa
                                 event.getTextChannel().sendMessage(MSAService.checkIntent(rasa.analyzeIntent(quiz.getQuestion()))).queue();
@@ -66,6 +72,7 @@ public class MessageEvent extends ListenerAdapter {
                         }
                     }else{
                         event.getTextChannel().sendMessage("yaml file mapping error").queue();
+
                     }
                 }else{
                     /* intent analyze */

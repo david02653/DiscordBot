@@ -31,6 +31,14 @@ public class MSAService {
     // Eureka service
     public void serviceEnvironment(){
         // implement action_service_env
+        String url = "http://140.121.197.130:9040/env/";
+        RestTemplate template = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        System.out.println(template.exchange(url, HttpMethod.GET, entity, String.class));
+
+
     }
 
     // Zuul and swagger service

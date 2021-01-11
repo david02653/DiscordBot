@@ -56,10 +56,11 @@ public class MessageEvent extends ListenerAdapter {
 //                                event.getTextChannel().sendMessage(restRequest(quiz.getSource(), quiz.getMethod())).queue();
 //                                event.getTextChannel().sendMessage(AdditionalQAService.insertMessage(event.getMessage().getContentDisplay())).queue();
                                 String result = restRequest(quiz.getSource(), quiz.getMethod());
-                                if(result.length() > 2000)
+                                if(result != null && result.length() > 2000)
                                     event.getTextChannel().sendMessage(AdditionalQAService.insertMessage(restRequest(quiz.getSource(), quiz.getMethod()))).queue();
                                 else
                                     event.getTextChannel().sendMessage(restRequest(quiz.getSource(), quiz.getMethod())).queue();
+
                             }else if(quiz.getResource().toLowerCase().equals("rasa")){
                                 // send to rasa
                                 event.getTextChannel().sendMessage(MSAService.checkIntent(rasa.analyzeIntent(quiz.getQuestion()))).queue();

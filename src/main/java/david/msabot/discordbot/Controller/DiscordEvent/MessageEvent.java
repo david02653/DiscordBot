@@ -75,6 +75,8 @@ public class MessageEvent extends ListenerAdapter {
                         event.getTextChannel().sendMessage("yaml file mapping error").queue();
 
                     }
+                }else if(msgReceived.startsWith("^")){
+                    // rasa tunnel for additional qa
                 }else{
                     /* intent analyze */
                     rasa.analyzeIntent(msgReceived);

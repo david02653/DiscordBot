@@ -1,11 +1,16 @@
 package david.msabot.discordbot.Rabbitmq.Producer;
 
 import david.msabot.discordbot.Rabbitmq.RabbitConfig;
-import okhttp3.Response;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+/**
+ * send message to rabbitMQ server
+ * this controller is currently UNUSED
+ * just keep it in case i need a rabbitmq producer
+ */
 @RestController
 @RequestMapping(value = "/rabbit")
 public class SendMessage {

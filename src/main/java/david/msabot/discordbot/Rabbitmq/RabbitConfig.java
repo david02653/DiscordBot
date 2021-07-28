@@ -15,14 +15,33 @@ import org.springframework.amqp.rabbit.support.DefaultMessagePropertiesConverter
 import org.springframework.amqp.rabbit.support.MessagePropertiesConverter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 
+/**
+ * this class controls connection with rabbitMQ server
+ *
+ * to add new consumer connection, you need to add create a new exchange and queue, you can also use existing ones
+ * 1. create queue
+ * 2. create exchange
+ * 3. bind exchange and queue, note that you can set routing key in this step
+ * 4. define which class and which function will handle incoming message from your queue
+ * 5. create message listener container
+ *
+ * use existing code below as template
+ */
 @Configuration
 public class RabbitConfig {
+
+    private final JDAService jdaService;
+    private final MessageHandler messageHandler;
+
+    public RabbitConfig(JDAService jdaService, MessageHandler messageHandler){
+        this.jdaService = jdaService;
+        this.messageHandler = messageHandler;
+    }
 
     public static final String EXCHANGE_NAME = "myExchange";
     public static final String QUEUE_NAME = "myQueue";
@@ -116,6 +135,14 @@ public class RabbitConfig {
 
 
     /* consumer message function settings */
+
+    /**
+     * bind rabbitmq consumer with assigned class and method
+     * let assigned method to handle incoming message
+     * note that received message type will be byte array
+     * @param handler message handler
+     * @return instance of message listener adapter
+     */
     @Bean
     MessageListenerAdapter listenerAdapter(MessageHandler handler){
         return new MessageListenerAdapter(handler, "handleMessage");
@@ -129,14 +156,19 @@ public class RabbitConfig {
         return new MessageListenerAdapter(handler, "handleEurekaMessage");
     }
 
-    // consumer settings
+    /**
+     * bind exchange, queue, message handler together
+     * @param connectionFactory
+     * @return consumer container
+     */
+    /* consumer settings */
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory/*, MessageListenerAdapter adapter*/){
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(QUEUE_NAME);
 //        container.setMessageListener(adapter);
-        container.setMessageListener(listenerAdapter(new MessageHandler()));
+        container.setMessageListener(listenerAdapter(messageHandler));
 
         return container;
     }
@@ -146,7 +178,7 @@ public class RabbitConfig {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(JENKINS_QUEUE);
-        container.setMessageListener(jenkinsListener(new MessageHandler()));
+        container.setMessageListener(jenkinsListener(messageHandler));
 
         return container;
     }
@@ -156,7 +188,7 @@ public class RabbitConfig {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(EUREKA_QUEUE);
-        container.setMessageListener(eurekaListener(new MessageHandler()));
+        container.setMessageListener(eurekaListener(messageHandler));
         return container;
     }
 
@@ -173,8 +205,8 @@ public class RabbitConfig {
             String msg = new String(message.getBody());
             System.out.println(msg);
             try {
-                JDAService.jda.awaitReady();
-                JDAService.send("text2", " [x] from '" + message.getMessageProperties().getReceivedRoutingKey() + "' : " + msg);
+                jdaService.getJda().awaitReady();
+                jdaService.send("text2", " [x] from '" + message.getMessageProperties().getReceivedRoutingKey() + "' : " + msg);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

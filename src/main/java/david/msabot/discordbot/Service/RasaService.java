@@ -8,36 +8,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.util.StringUtils;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * define functions who needs to interact with rasa endpoint
+ */
+@Service
 public class RasaService {
 
+    private final String RASA_ENDPOINT;
+
     @Autowired
-    private Environment environment;
+    public RasaService(Environment env){
+        this.RASA_ENDPOINT = env.getProperty("env.setting.rasa.v2.url");
+    }
 
-//    @Value("${env.setting.rasa.url}")
-//    String RASA_ENDPOINT;
-    private static int stage;
+    // save stages if multi-turns of conversation is required, unused for now
+    private int stage;
 
+    /**
+     * rasa api
+     * send message to rasa to analyze intent and service name
+     * should receive something like this:
+     * [{"recipient_id":"test","text":"{'intent': 'action_build_fail', 'service': 'none'}"}]
+     * note that return message from rasa might not be a legal json string, fix received message if necessary
+     * @param data message
+     * @return rasa reaction
+     */
     public IntentSet analyzeIntent(String data){
-        MSAService msaService = new MSAService();
-
-//        String RASA_ENDPOINT = "http://140.121.197.130:9004";
-        String RASA_ENDPOINT = environment.getProperty("env.setting.rasa.url");
 
         // implement function stage_rasa(...)
         // POST method to rasa endpoint, return with json type data {intent, data}
 
         RestTemplate template = new RestTemplate();
         String path = RASA_ENDPOINT + "/webhooks/rest/webhook";
-//        System.out.println(path);
 
         // set request content
         JsonObject content = new JsonObject();
         content.addProperty("message", data);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-        HttpEntity<String> entity = new HttpEntity<String>(content.toString(), headers);
+        HttpEntity<String> entity = new HttpEntity<>(content.toString(), headers);
         ResponseEntity<String> response = template.exchange(path, HttpMethod.POST, entity, String.class);
 
         System.out.println(response);
@@ -85,7 +97,7 @@ public class RasaService {
 //        builder.deleteCharAt(0);
 
         String temp = builder.toString();
-        String result = "{";
+        StringBuilder result = new StringBuilder("{");
         String[] second = temp.split("");
         for(int i=1; i<second.length; i++){
 //            System.out.println("current=[" + second[i] + "], i=" + i + ", result=[" + result + "]");
@@ -94,28 +106,32 @@ public class RasaService {
             if(second[i].equals("\"")){
                 if(open - close == 1){
                     if(second[i+1].equals("{") || second[i-1].equals("}")) {
-                        result += "";
+                        result.append("");
                     }
                     else{
-                        result += "\\\"";
+                        result.append("\\\"");
                     }
 //                    result += second[i];
-                    continue;
                 }else{
                     if(second[i-1].equals("\\")) {
-                        result += second[i];
+                        result.append(second[i]);
                     }else{
-                        result += "\\\"";
+                        result.append("\\\"");
                     }
-                    continue;
                 }
+                continue;
             }
-            result += second[i];
+            result.append(second[i]);
         }
 
-        return result;
+        return result.toString();
     }
 
+    /**
+     * make received message from rasa a legal json string format
+     * @param raw raw message
+     * @return processed message
+     */
     public String noSlash(String raw){
         String[] token = raw.split("");
         StringBuilder result = new StringBuilder();
@@ -147,6 +163,13 @@ public class RasaService {
             output.append(second[i]);
         }
         return output.toString();
+    }
+
+    /**
+     * use api to reload rasa service
+     */
+    public void reloadRasa(){
+        // todo: rasa reload
     }
 
 

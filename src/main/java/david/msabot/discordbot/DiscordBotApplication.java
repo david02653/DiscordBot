@@ -1,24 +1,17 @@
 package david.msabot.discordbot;
 
-import com.google.gson.JsonObject;
-import david.msabot.discordbot.Service.JDAService;
-import david.msabot.discordbot.Service.MSAService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
-public class DiscordbotApplication {
+public class DiscordBotApplication {
 
-    private static RestTemplate template = new RestTemplate();
-    private static String discordPath = "http://localhost:8080/Disbot";
-    private static String rabbitPath = "http://localhost:8080/rabbit";
+//    private static RestTemplate template = new RestTemplate();
+//    private static String discordPath = "http://localhost:8080/Disbot";
+//    private static String rabbitPath = "http://localhost:8080/rabbit";
 
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(DiscordbotApplication.class, args);
-        // add token in jdaService create function
-        JDAService.createJDA("NzM3MjE0MjQ4OTYyNDkwNDE4.Xx6GRQ.DuKAFAIRjN9SeONfcyH6kDK-R60");
+    public static void main(String[] args) {
+        SpringApplication.run(DiscordBotApplication.class, args);
 
         // set request content
 //        JsonObject content = new JsonObject();

@@ -4,27 +4,47 @@ import david.msabot.discordbot.Service.JDAService;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+
+/**
+ * handle each message from rabbitmq server
+ */
 @Service
 public class MessageHandler {
+
+    private final JDAService jdaService;
+
+    public MessageHandler(JDAService jdaService){
+        this.jdaService = jdaService;
+    }
 
     public void handleMessage(String msg){
         System.out.println(msg);
     }
 
+    /**
+     * parse received raw message to Type String
+     * replace '\n' with newline character
+     * @param message raw message received from rabbitmq
+     */
     public void handleJenkinsMessage(byte[] message){
-        String msg = new String(message);
-        msg = "[jenkins] " + msg;
-        System.out.println(msg);
+        String rawMsg = new String(message, StandardCharsets.UTF_8);
+        // replace '\n' characters with newline character to make sure we can split raw message in to multiple lines
+        String saltedRawMsg = rawMsg.replace("\\n", "\n");
+        String[] tokenList = saltedRawMsg.split("\n"); // the string array contains each line of raw message
+        System.out.println("[DEBUG][message_received][raw] " + rawMsg);
+        String output = "[Jenkins]> " + saltedRawMsg;
 
         // <-- maybe add some filter here
         // send message to discord
-        JDAService.send("test_channel", msg);
+        jdaService.send("test_channel", output);
     }
 
     public void handleEurekaMessage(byte[] message){
         String msg = new String(message);
         JSONObject obj  = new JSONObject(msg);
-        System.out.println(obj.toString());
+//        System.out.println(obj.toString());
+        System.out.println("[DEBUG][raw][handleEurekaMsg]" + obj);
 
 //        System.out.println(obj.get("status"));
         String status = (String) obj.get("status");
@@ -41,6 +61,6 @@ public class MessageHandler {
                 break;
         }
 
-        JDAService.send("test_channel", result);
+        jdaService.send("test_channel", result);
     }
 }

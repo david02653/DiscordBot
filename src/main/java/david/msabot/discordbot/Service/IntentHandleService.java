@@ -192,6 +192,8 @@ public class IntentHandleService {
      * request service api list from zuul endpoint
      * use zuul and swagger
      * note: implements action_service_api_list in MSABot
+     * check zuul api first to see the return format details
+     * you cannot use this function if the api dead anyway
      * @param service target service name
      * @return embed message
      */
@@ -235,6 +237,8 @@ public class IntentHandleService {
     /**
      * request system environment setting from eureka endpoint
      * note: implements action_service_env in MSABot, Eureka service
+     * check eureka api first to see the return format details
+     * you cannot use this function if the api dead anyway
      * @return result information
      */
     public String requestServiceEnv(){
@@ -266,6 +270,8 @@ public class IntentHandleService {
      * request service detail information from zuul endpoint
      * this api will need a service name in lower case
      * note: implements action_service_info in MSABot, Zuul and Actuator service
+     * check zuul api first to see the return format details
+     * you cannot use this function if the api dead anyway
      * @param service target service name
      * @return result information
      */
@@ -307,6 +313,8 @@ public class IntentHandleService {
     /**
      * request for service using_info
      * note: implements action_service_using_info in MSABot, Zuul Swagger and Actuator api
+     * check zuul api first to see the return format details
+     * you cannot use this function if the api dead anyway
      * @param service target service name
      * @return result message
      */
@@ -384,6 +392,8 @@ public class IntentHandleService {
     /**
      * fire request to jenkins api to access job related information
      * this method gathers information about last failed build
+     * check jenkins api first to see the return format details
+     * you cannot use this function if the api dead anyway
      * @param service target service name
      * @return build information
      */
@@ -414,6 +424,8 @@ public class IntentHandleService {
     /**
      * fire request to jenkins api to access specific job information, including build number and test case details
      * this method gathers information about test case details
+     * check jenkins api first to see the return format details
+     * you cannot use this function if the api dead anyway
      * @param service target service name
      * @return test case details
      */
@@ -456,7 +468,7 @@ public class IntentHandleService {
      * @param testSuites JsonArray of test Suites
      * @return test suites information
      */
-    public ArrayList<JenkinsTestSuite> getTestSuiteDetails(JsonArray testSuites){
+    private ArrayList<JenkinsTestSuite> getTestSuiteDetails(JsonArray testSuites){
         ArrayList<JenkinsTestSuite> suiteReports = new ArrayList<>();
         for(JsonElement element: testSuites){
             JsonObject suite = element.getAsJsonObject();
@@ -476,7 +488,7 @@ public class IntentHandleService {
      * @param testCases
      * @return
      */
-    public ArrayList<JenkinsTestCase> getTestCaseDetails(JsonArray testCases){
+    private ArrayList<JenkinsTestCase> getTestCaseDetails(JsonArray testCases){
         JenkinsTestCase testCaseTemplate;
         ArrayList<JenkinsTestCase> report = new ArrayList<>();
         for(JsonElement element: testCases){

@@ -1,18 +1,15 @@
 package david.msabot.discordbot.Controller.DiscordEvent;
 
-import david.msabot.discordbot.Entity.AQA.Quiz;
+import david.msabot.discordbot.Entity.AdditionalQuestion.QuestionList;
 import david.msabot.discordbot.Entity.Rasa.IntentSet;
 import david.msabot.discordbot.Service.*;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -20,29 +17,27 @@ import java.util.*;
  * this class will listen to Discord onMessage received event
  */
 @Service
-public class MessageEvent extends ListenerAdapter {
+public class DiscordMessageEvent extends ListenerAdapter {
 
     /* required spring handled service */
-    private final AdditionalQAService aqaService;
     private final RasaService rasa;
     private final IntentHandleService intentHandler;
-    private final JDAMessageHandler jdaMsg;
+    private final JDAMessageHandler jdaMsgHandler;
 
-    private HashMap<String, HashMap<String, Quiz>> additionQAList;
+    private HashMap<String, HashMap<String, QuestionList>> additionQAList;
 
     /**
      * constructor for spring, instance are injected by spring
      * @param additionalQAService instance of AdditionalQAService class
      * @param rasa instance of RasaService class
      * @param intentHandle inject by spring, handle intent analyze and define what to do
-     * @param jdaMsg inject by spring, handle jda message-related service
+     * @param jdaMsgHandler inject by spring, handle jda message-related service
      */
     @Autowired
-    public MessageEvent(AdditionalQAService additionalQAService, RasaService rasa, IntentHandleService intentHandle, JDAMessageHandler jdaMsg){
-        this.aqaService = additionalQAService;
+    public DiscordMessageEvent(AdditionalQAService additionalQAService, RasaService rasa, IntentHandleService intentHandle, JDAMessageHandler jdaMsgHandler){
         this.rasa = rasa;
         this.intentHandler = intentHandle;
-        this.jdaMsg = jdaMsg;
+        this.jdaMsgHandler = jdaMsgHandler;
 
         // load additional question list
         this.additionQAList = additionalQAService.getMap();
@@ -68,9 +63,8 @@ public class MessageEvent extends ListenerAdapter {
         if(event.isFromType(ChannelType.PRIVATE)){
             System.out.printf("[private message] %s: %s\n", event.getAuthor().getName(), event.getMessage().getContentDisplay());
         }else{
-            // print [Service_name][Current_TextChannel] author_name: message content
-//            System.out.println("[DEBUG][Discord onMessage]: " + event.getMessage().getType());
-            System.out.printf("[%s][%s] %s: %s\n", event.getGuild().getName(), event.getTextChannel().getName(), Objects.requireNonNull(event.getMember()).getEffectiveName(), event.getMessage().getContentDisplay());
+            // [server name][server id][channel name] username: message-content
+            System.out.printf("[%s][%s][%s] %s: %s\n", event.getGuild().getName(), event.getTextChannel().getName(), event.getGuild().getId(), Objects.requireNonNull(event.getMember()).getEffectiveName(), event.getMessage().getContentDisplay());
 
             /* respond when speak is not a bot */
             if(!event.getAuthor().isBot()){
@@ -84,6 +78,10 @@ public class MessageEvent extends ListenerAdapter {
 //                System.out.println(response.getBody());
                 /* message received from discord */
                 String msgReceived = event.getMessage().getContentDisplay();
+
+                /* regex testing area */
+                // do regex detect here
+
                 /* check if message starts with any decorator */
                 if(msgReceived.startsWith("!")){
                     // additional qa
@@ -103,7 +101,7 @@ public class MessageEvent extends ListenerAdapter {
                         String analyzeResult = defaultMessageHandle(msgReceived);
 //                         /* print detected intent for now */
 //                        event.getTextChannel().sendMessage(rasa.analyzeIntent(msgReceived).toString()).queue();
-                        jdaMsg.sendMessage(event.getTextChannel(), analyzeResult);
+                        jdaMsgHandler.sendMessage(event.getTextChannel(), analyzeResult);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -139,32 +137,36 @@ public class MessageEvent extends ListenerAdapter {
         TextChannel currentChannel = event.getTextChannel();
         if(additionQAList.get(currentChannelName) != null){
             String result = "";
-            /* do stuffs if current channel have questions in list */
-            Quiz quiz = additionQAList.get(currentChannelName).get(msg.toLowerCase());
-            if(quiz != null){
-                String quizResource = quiz.getResource().toLowerCase();
+            /* do stuff if current channel have questions in list */
+            QuestionList questionList = additionQAList.get(currentChannelName).get(msg.toLowerCase());
+            if(questionList != null){
+                String quizResource = questionList.getResource().toLowerCase();
                 switch (quizResource){
                     case "rest":
                         /* handle addition question with resource from rest */
-                        result = AdditionalQAService.restRequest(quiz.getSource(), quiz.getMethod());
+                        result = AdditionalQAService.restRequest(questionList.getSource(), questionList.getMethod());
                         break;
                     case "rasa":
                         /* handle addition question with resource from rasa*/
-                        result = intentHandler.checkIntent(rasa.analyzeIntent(quiz.getQuestion()));
+                        result = intentHandler.checkIntent(rasa.analyzeIntent(questionList.getQuestion()));
                         break;
                     default:
                         /* extract answer from setting file */
-                        result = quiz.getAnswer();
+                        result = questionList.getAnswer();
                         break;
                 }
                 if(result != null)
-                    jdaMsg.sendMessage(currentChannel, quiz, result);
+                    jdaMsgHandler.sendMessage(currentChannel, result);
                 else
                     System.out.println("[DEBUG][addition_QA] null result !");
-            }else
-                event.getTextChannel().sendMessage("[Warning] No Additional question found or question list is not available.").queue();
-        }else
-            event.getTextChannel().sendMessage("[DEBUG] something goes wrong with setting file.").queue();
+            }else {
+//                event.getTextChannel().sendMessage("[Warning] No Additional question found or question list is not available.").queue();
+                jdaMsgHandler.sendMessage(event.getTextChannel(), "[Warning] No Additional question found or question list is not available.");
+            }
+        }else {
+//            event.getTextChannel().sendMessage("[DEBUG] something goes wrong with setting file.").queue();
+            jdaMsgHandler.sendMessage(event.getTextChannel(), "[DEBUG] something goes wrong with setting file.");
+        }
     }
 
     /**

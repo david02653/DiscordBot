@@ -1,5 +1,6 @@
 package david.msabot.discordbot.Entity.Jenkins;
 
+import com.google.gson.Gson;
 import david.msabot.discordbot.Service.AdditionalQAService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,6 +79,16 @@ public class JenkinsTestReport {
 
     public String getReportDetailUrl() {
         return reportDetailUrl;
+    }
+
+    /**
+     * json string format output
+     * @return object json string
+     */
+    public String asJsonString(){
+        Gson gson = new Gson();
+        String json = gson.toJson(this);
+        return json;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package david.msabot.discordbot.Service;
 
-import david.msabot.discordbot.Entity.AQA.Quiz;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -17,30 +16,28 @@ import java.util.ArrayList;
 @Service
 public class JDAMessageHandler {
 
-    /**
-     * Additional question service is used to call api for long messages (length > 2000)
-     */
-    private final AdditionalQAService additionalQAService;
+    private final LongMessageService longMessageService;
 
     @Autowired
-    public JDAMessageHandler(AdditionalQAService aqa){
-        this.additionalQAService = aqa;
+    public JDAMessageHandler(LongMessageService longMessageService){
+        this.longMessageService = longMessageService;
     }
 
 
-    /**
-     * find correspond answer in additional setting file and send back
-     * if message length > 2000, call api to handle
-     * @param channel target channel, default: where message received
-     * @param quiz quiz list of target channel
-     * @param msg incoming message
-     */
-    public void sendMessage(TextChannel channel, Quiz quiz, String msg){
-        if(msg.length() > 2000)
-            channel.sendMessage(additionalQAService.insertMessage(AdditionalQAService.restRequest(quiz.getSource(), quiz.getMethod()))).queue();
-        else
-            channel.sendMessage(msg).queue();
-    }
+//    /**
+//     * find correspond answer in additional setting file and send back
+//     * if message length > 2000, call api to handle
+//     * @param channel target channel, default: where message received
+//     * @param quiz quiz list of target channel
+//     * @param msg incoming message
+//     */
+//    public void sendMessage(TextChannel channel, Quiz quiz, String msg){
+//        if(msg.length() > 2000)
+////            channel.sendMessage(additionalQAService.insertMessage(AdditionalQAService.restRequest(quiz.getSource(), quiz.getMethod()))).queue();
+////            channel.sendMessage(longMessageService.addMessage()).queue();
+//        else
+//            channel.sendMessage(msg).queue();
+//    }
 
     /**
      * check message length and send back
@@ -49,7 +46,7 @@ public class JDAMessageHandler {
      */
     public void sendMessage(TextChannel channel, String msg){
         if(msg.length() > 2000)
-            channel.sendMessage(additionalQAService.insertMessage(msg)).queue();
+            channel.sendMessage(longMessageService.getUrl(longMessageService.addMessage(msg))).queue();
         else
             channel.sendMessage(msg).queue();
     }

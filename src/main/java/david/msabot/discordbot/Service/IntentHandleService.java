@@ -46,8 +46,9 @@ public class IntentHandleService {
     private final String jenkinsToken;
 
     /* required spring managed service */
-    private final RasaService rasaService;
-    private final AdditionalQAService additionalQAService;
+//    private final RasaService rasaService;
+//    private final AdditionalQAService additionalQAService;
+    private final LongMessageService longMessageService;
 
     // todo: jdaMessageHandle, jdaMemberHandle: future feature, may or may not be updated
     /* required service */
@@ -55,7 +56,7 @@ public class IntentHandleService {
     private JDAMemberHandle jdaMemberHandler;
 
     @Autowired
-    public IntentHandleService(Environment env, RasaService rasa, AdditionalQAService aqa){
+    public IntentHandleService(Environment env, LongMessageService longMessageService){
         this.zuulEndpoint = env.getProperty("env.setting.zuul.url");
         this.rasaEndpoint = env.getProperty("env.setting.rasa.v2.url");
         this.jenkinsEndpoint = env.getProperty("env.setting.jenkins.url");
@@ -64,8 +65,9 @@ public class IntentHandleService {
         this.jenkinsPw = env.getProperty("env.setting.jenkins.pw");
         this.jenkinsToken = env.getProperty("env.setting.jenkins.token");
 
-        this.rasaService = rasa;
-        this.additionalQAService = aqa;
+//        this.rasaService = rasa;
+//        this.additionalQAService = aqa;
+        this.longMessageService = longMessageService;
     }
 
 
@@ -394,6 +396,8 @@ public class IntentHandleService {
      * this method gathers information about last failed build
      * check jenkins api first to see the return format details
      * you cannot use this function if the api dead anyway
+     *
+     * suspend and use requestLastTestCaseDetail(String service) instead, for now
      * @param service target service name
      * @return build information
      */
@@ -454,8 +458,10 @@ public class IntentHandleService {
             int totalSkipCount = detailObj.get("skipCount").getAsInt();
             JenkinsTestReport testReport = JenkinsTestReport.createJenkinsTestReport(totalDuration, totalFailedCount, totalPassedCount, totalSkipCount);
             testReport.setTestSuites(getTestSuiteDetails(suites));
-            testReport.setReportDetailUrl(additionalQAService.insertMessage(testReport.getTestSuites().toString()));
-            return testReport.toString();
+//            testReport.setReportDetailUrl(additionalQAService.insertMessage(testReport.getTestSuites().toString()));
+            testReport.setReportDetailUrl(longMessageService.getUrl(longMessageService.addMessage(gson.toJson(testReport.getTestSuites()))));
+//            return testReport.toString();
+            return gson.toJson(testReport);
         }catch (RequestFailException e){
             return "Something goes wrong wit jenkins api request.";
         }

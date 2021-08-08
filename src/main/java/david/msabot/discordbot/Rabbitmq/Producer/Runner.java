@@ -1,7 +1,6 @@
 package david.msabot.discordbot.Rabbitmq.Producer;
 
-import david.msabot.discordbot.Rabbitmq.Consumer.MessageHandler;
-import david.msabot.discordbot.Rabbitmq.RabbitConfig;
+import david.msabot.discordbot.Rabbitmq.Consumer.RabbitMessageHandler;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -15,9 +14,9 @@ import org.springframework.stereotype.Component;
 public class Runner implements CommandLineRunner {
 
     private final RabbitTemplate template;
-    private final MessageHandler handler;
+    private final RabbitMessageHandler handler;
 
-    public Runner(RabbitTemplate templatem, MessageHandler handler){
+    public Runner(RabbitTemplate templatem, RabbitMessageHandler handler){
         this.template = templatem;
         this.handler = handler;
     }

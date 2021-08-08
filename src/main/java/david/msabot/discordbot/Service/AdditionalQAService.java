@@ -3,8 +3,8 @@ package david.msabot.discordbot.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
-import david.msabot.discordbot.Entity.AQA.AdditionalQuizList;
-import david.msabot.discordbot.Entity.AQA.Quiz;
+import david.msabot.discordbot.Entity.AdditionalQuestion.AdditionalQuizList;
+import david.msabot.discordbot.Entity.AdditionalQuestion.QuestionList;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -52,7 +52,7 @@ public class AdditionalQAService {
      * get current question list in HashMap
      * @return current question list
      */
-    public HashMap<String, HashMap<String, Quiz>> getMap(){
+    public HashMap<String, HashMap<String, QuestionList>> getMap(){
         return parse();
     }
 
@@ -83,12 +83,12 @@ public class AdditionalQAService {
      * parse loaded question list in to HashMap
      * @return loaded question list
      */
-    public HashMap<String, HashMap<String, Quiz>> parse(){
-        HashMap<String, HashMap<String, Quiz>> target = new HashMap<>();
+    public HashMap<String, HashMap<String, QuestionList>> parse(){
+        HashMap<String, HashMap<String, QuestionList>> target = new HashMap<>();
         lists.forEach(channel -> {
-            HashMap<String, Quiz> map = new HashMap<>();
-            channel.getList().forEach(quiz -> {
-                map.put(quiz.getQuestion().toLowerCase(), quiz);
+            HashMap<String, QuestionList> map = new HashMap<>();
+            channel.getList().forEach(questionList -> {
+                map.put(questionList.getQuestion().toLowerCase(), questionList);
             });
             target.put(channel.getChannel().toLowerCase(), map);
         });
@@ -96,6 +96,7 @@ public class AdditionalQAService {
     }
 
     /**
+     * SUSPEND, use long message service instead
      * handle message over 2000 characters
      * send message to other service and save in mongodb
      * return link of message

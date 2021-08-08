@@ -1,6 +1,7 @@
 package david.msabot.discordbot.Rabbitmq.Consumer;
 
-import david.msabot.discordbot.Service.JDAService;
+import david.msabot.discordbot.Service.JDAConnect;
+import david.msabot.discordbot.Service.LongMessageService;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -10,12 +11,12 @@ import java.nio.charset.StandardCharsets;
  * handle each message from rabbitmq server
  */
 @Service
-public class MessageHandler {
+public class RabbitMessageHandler {
 
-    private final JDAService jdaService;
+    private final JDAConnect jdaService;
 
-    public MessageHandler(JDAService jdaService){
-        this.jdaService = jdaService;
+    public RabbitMessageHandler(JDAConnect jdaConnect){
+        this.jdaService = jdaConnect;
     }
 
     public void handleMessage(String msg){

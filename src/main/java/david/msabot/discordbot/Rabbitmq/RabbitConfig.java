@@ -1,22 +1,16 @@
 package david.msabot.discordbot.Rabbitmq;
 
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Envelope;
-import com.rabbitmq.client.impl.AMQBasicProperties;
-import com.rabbitmq.client.impl.AMQContentHeader;
-import com.sun.tools.jconsole.JConsoleContext;
-import david.msabot.discordbot.Rabbitmq.Consumer.MessageHandler;
-import david.msabot.discordbot.Service.JDAService;
+import david.msabot.discordbot.Rabbitmq.Consumer.RabbitMessageHandler;
+import david.msabot.discordbot.Service.JDAConnect;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.amqp.rabbit.support.DefaultMessagePropertiesConverter;
-import org.springframework.amqp.rabbit.support.MessagePropertiesConverter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import java.util.Arrays;
 
@@ -35,12 +29,12 @@ import java.util.Arrays;
 @Configuration
 public class RabbitConfig {
 
-    private final JDAService jdaService;
-    private final MessageHandler messageHandler;
+    private final JDAConnect jdaService;
+    private final RabbitMessageHandler rabbitMessageHandler;
 
-    public RabbitConfig(JDAService jdaService, MessageHandler messageHandler){
-        this.jdaService = jdaService;
-        this.messageHandler = messageHandler;
+    public RabbitConfig(JDAConnect jdaConnect, RabbitMessageHandler rabbitMessageHandler, Environment env){
+        this.jdaService = jdaConnect;
+        this.rabbitMessageHandler = rabbitMessageHandler;
     }
 
     public static final String EXCHANGE_NAME = "myExchange";
@@ -144,15 +138,15 @@ public class RabbitConfig {
      * @return instance of message listener adapter
      */
     @Bean
-    MessageListenerAdapter listenerAdapter(MessageHandler handler){
+    MessageListenerAdapter listenerAdapter(RabbitMessageHandler handler){
         return new MessageListenerAdapter(handler, "handleMessage");
     }
     @Bean
-    MessageListenerAdapter jenkinsListener(MessageHandler handler){
+    MessageListenerAdapter jenkinsListener(RabbitMessageHandler handler){
         return new MessageListenerAdapter(handler, "handleJenkinsMessage");
     }
     @Bean
-    MessageListenerAdapter eurekaListener(MessageHandler handler){
+    MessageListenerAdapter eurekaListener(RabbitMessageHandler handler){
         return new MessageListenerAdapter(handler, "handleEurekaMessage");
     }
 
@@ -168,7 +162,7 @@ public class RabbitConfig {
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(QUEUE_NAME);
 //        container.setMessageListener(adapter);
-        container.setMessageListener(listenerAdapter(messageHandler));
+        container.setMessageListener(listenerAdapter(rabbitMessageHandler));
 
         return container;
     }
@@ -178,7 +172,7 @@ public class RabbitConfig {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(JENKINS_QUEUE);
-        container.setMessageListener(jenkinsListener(messageHandler));
+        container.setMessageListener(jenkinsListener(rabbitMessageHandler));
 
         return container;
     }
@@ -188,7 +182,7 @@ public class RabbitConfig {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(EUREKA_QUEUE);
-        container.setMessageListener(eurekaListener(messageHandler));
+        container.setMessageListener(eurekaListener(rabbitMessageHandler));
         return container;
     }
 

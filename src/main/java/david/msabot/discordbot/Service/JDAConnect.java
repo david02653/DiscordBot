@@ -1,6 +1,6 @@
 package david.msabot.discordbot.Service;
 
-import david.msabot.discordbot.Controller.DiscordEvent.MessageEvent;
+import david.msabot.discordbot.Controller.DiscordEvent.DiscordMessageEvent;
 import david.msabot.discordbot.Controller.DiscordEvent.ReadyListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -19,17 +19,17 @@ import java.util.List;
  * main control of discord bot
  */
 @Service
-public class JDAService {
+public class JDAConnect {
     private JDA jda;
     private ReadyListener readyListener;
-    private MessageEvent messageEventListener;
-    private final String DISCORD_SERVER_TOKEN;
+    private DiscordMessageEvent discordMessageEventListener;
+    private final String DISCORD_BOT_TOKEN;
 
     @Autowired
-    public JDAService(ReadyListener readyListener, MessageEvent messageEvent, Environment env){
+    public JDAConnect(ReadyListener readyListener, DiscordMessageEvent discordMessageEvent, Environment env){
         this.readyListener = readyListener;
-        this.messageEventListener = messageEvent;
-        this.DISCORD_SERVER_TOKEN = env.getProperty("env.setting.discord");
+        this.discordMessageEventListener = discordMessageEvent;
+        this.DISCORD_BOT_TOKEN = env.getProperty("env.setting.discord.bot");
     }
 
     /**
@@ -39,7 +39,7 @@ public class JDAService {
     @PostConstruct
     private void init(){
         try{
-            createJDA(DISCORD_SERVER_TOKEN);
+            createJDAConnect(DISCORD_BOT_TOKEN);
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("[JDA] initialize failed !");
@@ -55,14 +55,14 @@ public class JDAService {
      * @param token server token
      * @throws LoginException if discord login failed
      */
-    public void createJDA(String token) throws LoginException {
+    public void createJDAConnect(String token) throws LoginException {
         JDABuilder builder = JDABuilder.createDefault(token);
 
         configure(builder);
         // add customized ReadyListener
         builder.addEventListeners(readyListener);
         // add customized MessageListener
-        builder.addEventListeners(messageEventListener);
+        builder.addEventListeners(discordMessageEventListener);
         jda = builder.build();
     }
 

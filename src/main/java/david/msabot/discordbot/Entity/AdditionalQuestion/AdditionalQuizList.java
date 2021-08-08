@@ -1,10 +1,10 @@
-package david.msabot.discordbot.Entity.AQA;
+package david.msabot.discordbot.Entity.AdditionalQuestion;
 
 import java.util.ArrayList;
 
 public class AdditionalQuizList {
     private String channel;
-    private ArrayList<Quiz> list;
+    private ArrayList<QuestionList> list;
 
     public AdditionalQuizList(){}
 
@@ -12,7 +12,7 @@ public class AdditionalQuizList {
         this.channel = channel;
     }
 
-    public void setList(ArrayList<Quiz> list) {
+    public void setList(ArrayList<QuestionList> list) {
         this.list = list;
     }
 
@@ -20,7 +20,7 @@ public class AdditionalQuizList {
         return channel;
     }
 
-    public ArrayList<Quiz> getList() {
+    public ArrayList<QuestionList> getList() {
         return list;
     }
 

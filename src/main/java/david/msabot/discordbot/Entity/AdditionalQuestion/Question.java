@@ -1,21 +1,28 @@
-package david.msabot.discordbot.Entity.AQA;
+package david.msabot.discordbot.Entity.AdditionalQuestion;
 
-public class Quiz {
+import java.util.ArrayList;
+
+public class Question {
     private String creator;
     private String resource;
     private String source = null;
     private String method = null;
-    private String question;
+    private ArrayList<String> pattern;
+    private ArrayList<String> question;
     private String answer;
 
-    public Quiz(){}
+    public Question(){}
 
     public void setCreator(String creator) {
         this.creator = creator;
     }
 
-    public void setQuestion(String question) {
+    public void setQuestion(ArrayList<String> question) {
         this.question = question;
+    }
+
+    public void setPattern(ArrayList<String> pattern) {
+        this.pattern = pattern;
     }
 
     public void setAnswer(String answer) {
@@ -38,8 +45,12 @@ public class Quiz {
         return creator;
     }
 
-    public String getQuestion() {
+    public ArrayList<String> getQuestion() {
         return question;
+    }
+
+    public ArrayList<String> getPattern() {
+        return pattern;
     }
 
     public String getResource() {
@@ -60,11 +71,12 @@ public class Quiz {
 
     @Override
     public String toString() {
-        return "Quiz{" +
+        return "QuestionList{" +
                 "creator='" + creator + '\'' +
                 ", resource='" + resource + '\'' +
                 ", source='" + source + '\'' +
                 ", method='" + method + '\'' +
+                ", pattern='" + pattern + '\'' +
                 ", question='" + question + '\'' +
                 ", answer='" + answer + '\'' +
                 '}';

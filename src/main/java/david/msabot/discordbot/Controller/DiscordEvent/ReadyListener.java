@@ -33,7 +33,7 @@ public class ReadyListener implements EventListener {
     public void onEvent(@NotNull GenericEvent event) {
         if(event instanceof ReadyEvent){
             System.out.println("> JDA API ready");
-            fireOnlineMsg(event);
+//            fireOnlineMsg(event);
 
             if(aqaService.loadFile()){
                 System.out.println(">> yaml file load success !");

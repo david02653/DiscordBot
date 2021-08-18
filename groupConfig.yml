@@ -1,0 +1,20 @@
+server: template server
+groups:
+  - groupName: alpha group
+    ruleSet:
+      - channel:
+          - "channel 1"
+          - "channel 2"
+        configs:
+          - name: config 1
+            value: content 1
+          - name: config 2
+            value: content 2
+      - channel:
+          - "channel 3"
+          - "channel 4"
+        configs:
+          - name: config 3
+            value: content 3
+  - groupName: beta group
+    ruleSet: []

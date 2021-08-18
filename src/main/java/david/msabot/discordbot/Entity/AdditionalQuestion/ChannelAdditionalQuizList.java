@@ -2,17 +2,17 @@ package david.msabot.discordbot.Entity.AdditionalQuestion;
 
 import java.util.ArrayList;
 
-public class AdditionalQuizList {
+public class ChannelAdditionalQuizList {
     private String channel;
-    private ArrayList<QuestionList> list;
+    private ArrayList<Question> list;
 
-    public AdditionalQuizList(){}
+    public ChannelAdditionalQuizList(){}
 
     public void setChannel(String channel) {
         this.channel = channel;
     }
 
-    public void setList(ArrayList<QuestionList> list) {
+    public void setList(ArrayList<Question> list) {
         this.list = list;
     }
 
@@ -20,13 +20,13 @@ public class AdditionalQuizList {
         return channel;
     }
 
-    public ArrayList<QuestionList> getList() {
+    public ArrayList<Question> getList() {
         return list;
     }
 
     @Override
     public String toString() {
-        return "AdditionalQuizList{" +
+        return "ChannelAdditionalQuizList{" +
                 "channel='" + channel + '\'' +
                 ", list=" + list +
                 '}';

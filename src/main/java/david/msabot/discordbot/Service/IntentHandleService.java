@@ -79,7 +79,7 @@ public class IntentHandleService {
      * @param set target intent set object
      * @return correspond result
      */
-    public String checkIntent(IntentSet set) throws Exception {
+    public String checkIntent(IntentSet set) throws RequestFailException, JsonProcessingException {
         String intent = set.getIntent();
         String service = set.getService();
 
@@ -160,7 +160,7 @@ public class IntentHandleService {
      * note: implements action_service_health in MSABot, Eureka service
      * @throws JsonProcessingException error parsing eureka xml response
      */
-    public String requestHealthData() throws JsonProcessingException, Exception {
+    public String requestHealthData() throws JsonProcessingException, RequestFailException {
         String url = eurekaEndpoint + "/eureka/apps";
         String rawData = "";
         ResponseEntity<String> response = fireRestExchange(url, HttpMethod.GET, new HashMap<>(Collections.singletonMap("Accept", MediaType.APPLICATION_XML_VALUE)));
@@ -168,7 +168,7 @@ public class IntentHandleService {
         if(rawData == null || response.getStatusCodeValue() != 200){
             /* api request failed somehow, do something */
             System.out.println("[DEBUG][healthData] eureka api request failed or return with null body.");
-            throw new Exception();
+            throw new RequestFailException();
         }
         XmlMapper mapper = new XmlMapper();
         EurekaResponse result = mapper.readValue(replaceReServed(rawData), EurekaResponse.class);

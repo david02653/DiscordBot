@@ -4,32 +4,39 @@ list:
     resource: file
     source: none
     method: none
-    question: Is it on
+    pattern:
+      - "^[a-zA-Z ]+on$"
+      - "^is[a-zA-Z ]+on$"
+    question:
+      - "Is it on"
     answer: yeah, as you see
   - creator: david
     resource: file
     source: none
     method: none
-    question: how to add
+    pattern:
+      - "^$"
+    question:
+      - "how to add"
     answer: add question in yaml file
   - creator: david
     resource: file
     source: none
     method: none
-    question: any others
+    pattern:
+      - "^$"
+    question:
+      - "any others"
     answer: text2
   - creator: david
     resource: rest
     source: http://140.121.197.130:9040/eureka/apps
     method: get:xml
-    question: app data
+    pattern:
+      - "^$"
+    question:
+      - "app data"
     answer: get service app data
-  - creator: david
-    resource: rasa
-    source: none
-    method: none
-    question: health data
-    answer: service health data
 ---
 channel: text2
 list:
@@ -37,7 +44,10 @@ list:
     resource: file
     source: none
     method: none
-    question: where is it
+    pattern:
+      - "^$"
+    question:
+      - "where is it"
     answer: this is channel text2
 ---
 channel: prototype
@@ -46,23 +56,26 @@ list:
     resource: file
     source: none
     method: none
-    question: fixed question
+    pattern:
+      - "^$"
+    question:
+      - "fixed question"
     answer: fixed answer
   - creator: prototype
     resource: rest
     source: url
     method: get:contentType
-    question: get-command
+    pattern:
+      - "^$"
+    question:
+      - "get-command"
     answer: anything
   - creator: prototype
     resource: rest
     source: url
     method: post:contentType
-    question: post-command
+    pattern:
+      - "^$"
+    question:
+      - "post-command"
     answer: requestBody?
-  - creator: prototype
-    resource: rasa
-    source: none
-    method: none
-    question: current rasa input
-    answer: intent output / anything

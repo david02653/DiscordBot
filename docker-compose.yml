@@ -1,0 +1,20 @@
+version: '3.3'
+
+services:
+  mongodb:
+    image: mongo:latest
+    restart: always
+    container_name: msdobot-mongodb
+    environment:
+      MONGO_INITDB_DATABASE: msdobot
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./mongo-volume:/data/db
+  msdobot:
+    image: msdobot-server:latest
+    restart: always
+    container_name: msdobot-discord-server
+    ports:
+      - "10080:10080"
